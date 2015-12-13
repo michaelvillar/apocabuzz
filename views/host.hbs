@@ -3,13 +3,39 @@
   <div class="code">{{code}}</div>
 
   <h2>Players</h2>
-  <ul>
-    {{#each players}}
-      <li>{{name}}</li>
-    {{/each}}
-  </ul>
+  <div class="players">
+    <script type="text/x-handlebars" id="template-players">
+    <ul>
+    \{{#each players}}
+      <li>\{{name}}</li>
+    \{{/each}}
+    </ul>
+    </script>
+  </div>
 </section>
 
 <section class="game">
 
 </section>
+
+<script>
+var createTemplate = function(selector) {
+  var html = document.querySelector('#template-' + selector).innerHTML ;
+    return template = Handlebars.compile(html);  
+};
+
+var templates = {
+  players: createTemplate('players'),
+};
+
+var router = {};
+router.playersChanged = function (m) {
+  var el = document.querySelector('.players');
+  el.innerHTML = templates.players(m);
+}
+var socket = io('http://localhost:3000/');
+socket.on('playersChanged', router.playersChanged);
+socket.emit('host', {
+  code: '{{code}}',
+});
+</script>
