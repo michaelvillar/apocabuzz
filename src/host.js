@@ -144,8 +144,35 @@ Host.prototype.vote = function(data) {
     }));
 
     console.log("Vote on", data.bee_id, "is", type, "from team", team);
-    this.nextBee();
-  });
+    let isRight = this.currentBee.type === type;
+    let oppositeTeam = (team === 'blue' ? 'green' : 'blue');
+
+    let promise = null;
+    if (this.currentBee.type === 'bee') {
+      if (isRight) {
+        promise = db.games.incrementScore(this.code, team, 1);
+      } else {
+        promise = db.games.incrementScore(this.code, oppositeTeam, 1);
+      }
+    } else {
+      if (isRight) {
+        console.log("TODO: secret clue");
+        promise = new Promise(function(resolver, rejector) {
+          resolver();
+        });
+      } else {
+        promise = db.games.incrementScore(this.code, team, -2);
+      }
+    }
+
+    return promise.then(() => {
+      this.pub.publish(`game_${this.code}`, JSON.stringify({
+        url: 'scoreChanged',
+      }));
+
+      return this.nextBee();
+    });
+  })
 };
 
 module.exports = Host;

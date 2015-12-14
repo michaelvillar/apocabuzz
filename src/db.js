@@ -67,9 +67,16 @@ db.games.join = function(code, name, team) {
 db.games.getScore = function(code) {
   return client.hmget(`game_${code}`, 'score_blue', 'score_green').then(function(res) {
     return {
-      blue: res.score_blue || 0,
-      green: res.score_green || 0,
+      blue: res[0] || 0,
+      green: res[1] || 0,
     };
+  });
+};
+
+db.games.incrementScore = function(code, team, value) {
+  return client.hget(`game_${code}`, `score_${team}`)
+  .then(function(score) {
+    return client.hset(`game_${code}`, `score_${team}`, Math.max(0, parseInt(score || 0) + value));
   });
 };
 

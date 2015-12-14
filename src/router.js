@@ -12,6 +12,10 @@ Router.prototype.gameStateChanged = function(host) {
   emitter.sendGameState(this._getGamePlayers(host), host.code);
   emitter.sendGameState(host, host.code);
 };
+Router.prototype.scoreChanged = function(host) {
+  emitter.sendScore(this._getGamePlayers(host), host.code);
+  emitter.sendScore(host, host.code);
+};
 Router.prototype.gameStart = function(host) {
   host.start();
 };
