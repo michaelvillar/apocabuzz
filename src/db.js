@@ -10,7 +10,7 @@ db.games.isExisting = function(code) {
 };
 
 db.games.create = function(code) {
-  return client.hset(`game_${code}`, 'state', 'no_started').then(function(res) {
+  return client.hset(`game_${code}`, 'state', 'init').then(function(res) {
     return code;
   });
 };
@@ -18,6 +18,10 @@ db.games.create = function(code) {
 db.games.getState = function(code) {
   return client.hget(`game_${code}`, 'state');
 };
+
+db.games.setState = function(code, state) {
+  return client.hset(`game_${code}`, 'state', state);
+}
 
 db.games.join = function(code, name) {
   return db.games.isExisting(code)
@@ -28,7 +32,7 @@ db.games.join = function(code, name) {
     return db.games.getState(code);
   })
   .then(function(state) {
-    if (state !== 'no_started') {
+    if (state !== 'init') {
       throw new Error("This game already started");
     }
 

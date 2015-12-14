@@ -7,7 +7,12 @@ let io = require('socket.io')(server);
 let sub = require('./src/redis')();
 let pub = require('./src/redis')();
 let db = require('./src/db');
+let emitter = require('./src/emitter');
 let findNextCode = require('./src/find_next_code');
+
+let Router = require('./src/router');
+let Host = require('./src/host');
+let Player = require('./src/player');
 
 app.use('/public', express.static(__dirname + '/public/'));
 
@@ -29,7 +34,9 @@ app.get('/join', function (req, res) {
     pub.publish(`game_${code}`, JSON.stringify({
       url: 'playersChanged',
     }));
-    res.render('join');
+    res.render('join', {
+      code: code,
+    });
   })
   .catch(function(e) {
     res.render('error', {
@@ -38,14 +45,19 @@ app.get('/join', function (req, res) {
   });
 });
 
-app.get('/host', function (req, res) {
+app.post('/host', function(req, res) {
   findNextCode()
   .then(db.games.create)
   .then(function(code) {
-    res.render('host', {
-      code: code,
-      players: []
-    });
+    res.redirect(`/host?code=${code}`);
+  });
+});
+
+app.get('/host', function (req, res) {
+  let code = req.query.code;
+  res.render('host', {
+    code: code,
+    players: []
   });
 });
 
@@ -53,21 +65,18 @@ let hosts = {};
 let players = {};
 io.on('connection', function(socket) {
   socket.on('host', function(m) {
-    hosts[m.code] = socket;
+    hosts[m.code] = new Host(socket, m.code, pub);
   });
+
+  socket.on('player', function(m) {
+    if (!players[m.code]) {
+      players[m.code] = [];
+    }
+    players[m.code].push(new Player(socket, m.code, pub));
+ });
 });
 
-
-let router = {};
-router.playersChanged = function(code) {
-  db.players.list(code).then(function(players) {
-    hosts[code].emit('playersChanged', {
-      players: players.map(function(name) {
-        return { name: name }
-      }),
-    })
-  });
-};
+let router = new Router(hosts, players);
 
 sub.psubscribe('game_*');
 sub.on('pmessage', function(pattern, channel, message) {

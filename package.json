@@ -13,6 +13,7 @@
     "nodemon": "^1.8.1"
   },
   "scripts": {
-    "start": "nodemon web.js --exec babel-node"
+    "start": "nodemon web.js --exec 'DEBUG=socket.io babel-node'",
+    "compile": "babel public/js/app.js --watch --out-file public/js/app.es5.js"
   }
 }

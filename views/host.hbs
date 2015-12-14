@@ -1,4 +1,4 @@
-<section class="init">
+<section class="state init">
   <h2>Code</h2>
   <div class="code">{{code}}</div>
 
@@ -14,28 +14,10 @@
   </div>
 </section>
 
-<section class="game">
+<section class="state game">
 
 </section>
 
 <script>
-var createTemplate = function(selector) {
-  var html = document.querySelector('#template-' + selector).innerHTML ;
-    return template = Handlebars.compile(html);  
-};
-
-var templates = {
-  players: createTemplate('players'),
-};
-
-var router = {};
-router.playersChanged = function (m) {
-  var el = document.querySelector('.players');
-  el.innerHTML = templates.players(m);
-}
-var socket = io('http://localhost:3000/');
-socket.on('playersChanged', router.playersChanged);
-socket.emit('host', {
-  code: '{{code}}',
-});
+runHost('{{code}}');
 </script>
