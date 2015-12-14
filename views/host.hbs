@@ -45,6 +45,20 @@
       </script>
     </div>
   </div>
+
+  <div class="vote">
+    <h2>Last vote</h2>
+    <div class="vote-content">
+      <script type="text/x-handlebars" id="template-vote">
+      Team \{{team}} voted \{{vote}}<br>
+      \{{#if right}}
+        They were RIGHT
+      \{{else}}
+        Hoh no, they were WRONG
+      \{{/if}}
+      </script>
+    </div>
+  </div>
 </section>
 
 <script>

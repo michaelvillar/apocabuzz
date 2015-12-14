@@ -138,7 +138,7 @@ Host.prototype.vote = function(data) {
 
     this.pub.publish(`game_${this.code}`, JSON.stringify({
       url: 'voted',
-      bee_id: data.bee_id,
+      bee: this.currentBee,
       vote: type,
       team: team,
     }));

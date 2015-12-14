@@ -22,6 +22,9 @@ Router.prototype.beeChanged = function(host, data) {
 Router.prototype.vote = function(host, data) {
   return host.vote(data);
 };
+Router.prototype.voted = function(host, data) {
+  emitter.emit(host, 'voted', data);
+};
 
 Router.prototype._getGamePlayers = function(host, fn) {
   return db.players.list(host.code).then((players) => {

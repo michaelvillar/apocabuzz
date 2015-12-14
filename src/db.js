@@ -111,7 +111,7 @@ db.players.get = function(id) {
 db.bees.create = function(code) {
   let bee = {
     name: beeNames.rand(),
-    zombee: Math.round(Math.random()) == 1,
+    type: (Math.round(Math.random()) == 1 ? 'bee' : 'zombee'),
   };
 
   return client.hget(`game_${code}`, 'bee_id')
@@ -148,9 +148,9 @@ db.votes.get = function(code, bee_id, player_id) {
 db.votes.create = function(code, bee_id, type, player_id) {
   return client.exists(`game_${code}_bee_${bee_id}_vote_${player_id}`)
   .then(function(exists) {
-    // if (exists) {
-    //   throw new Error("You already voted");
-    // }
+    if (exists) {
+      throw new Error("You already voted");
+    }
     return client.hmset(`game_${code}_bee_${bee_id}_vote_${player_id}`, {
       type: type,
     });

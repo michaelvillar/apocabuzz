@@ -30,6 +30,7 @@ let runHost = function(code) {
     players: createTemplate('players'),
     hive: createTemplate('hive'),
     bee: createTemplate('bee'),
+    vote: createTemplate('vote'),
   };
 
   hideStates();
@@ -47,6 +48,10 @@ let runHost = function(code) {
   };
   router.beeChanged = function(m) {
     document.querySelector('.bee-content').innerHTML = templates.bee(m);
+  };
+  router.voted = function(m) {
+    m.right = m.bee.type === m.vote;
+    document.querySelector('.vote-content').innerHTML = templates.vote(m);
   };
 
   let socket = createSocket(router);
