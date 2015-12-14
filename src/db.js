@@ -78,7 +78,10 @@ db.players.create = function(id, name, code) {
 };
 
 db.players.get = function(id) {
-  return client.hgetall(`player_${id}`);
+  return client.hgetall(`player_${id}`).then(function(res) {
+    res.id = id;
+    return res;
+  });
 };
 
 module.exports = db;

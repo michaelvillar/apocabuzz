@@ -12,9 +12,9 @@ Router.prototype.gameStateChanged = function(code) {
   db.players.list(code).then((players) => {
     for (let i = 0; i < players.length; i++) {
       let player = players[i];
-      let code = player.code;
-      if (this.players[code]) {
-        emitter.sendGameState(this.players[code], code);
+      let id = player.id;
+      if (this.players[id]) {
+        emitter.sendGameState(this.players[id], player.code);
       }
     }
   });

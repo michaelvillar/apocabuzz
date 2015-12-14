@@ -47,7 +47,7 @@ let runHost = function(code) {
   });
 };
 
-let runPlayer = function(code) {
+let runPlayer = function(id) {
   hideStates();
 
   let router = {};
@@ -58,7 +58,7 @@ let runPlayer = function(code) {
   let socket = createSocket(router);
 
   socket.emit('player', {
-    code: code,
+    id: id,
   });
 
   document.querySelector('.button-start').addEventListener('click', function() {

@@ -13,7 +13,7 @@ let Player = function(socket, id, pub) {
 };
 
 Player.prototype.load = function() {
-  return db.players.get(this.id).then(function(player) {
+  return db.players.get(this.id).then((player) => {
     this.code = player.code;
     this.name = player.name;
   });
