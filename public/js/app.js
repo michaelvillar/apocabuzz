@@ -30,6 +30,8 @@ let runHost = function(code) {
     players: createTemplate('players'),
   };
 
+  hideStates();
+
   let router = {};
   router.gameState = function(m) {
     showState(m.state);

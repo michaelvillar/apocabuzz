@@ -5,6 +5,7 @@ let Host = function(socket, code) {
   this.code = code;
 
   emitter.sendPlayers(this, this.code);
+  emitter.sendGameState(this, this.code);
 };
 
 module.exports = Host;

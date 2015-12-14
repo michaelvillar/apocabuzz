@@ -1,10 +1,25 @@
 let db = require('./db');
 let emitter = require('./emitter');
 
-let Player = function(socket, code, pub) {
+let Player = function(socket, id, pub) {
   this.socket = socket;
-  this.code = code;
+  this.id = id;
   this.pub = pub;
+
+  this.load()
+  .then(() => {
+    this.init();
+  });
+};
+
+Player.prototype.load = function() {
+  return db.players.get(this.id).then(function(player) {
+    this.code = player.code;
+    this.name = player.name;
+  });
+};
+
+Player.prototype.init = function() {
   emitter.sendGameState(this, this.code);
 
   this.socket.on('start', () => {

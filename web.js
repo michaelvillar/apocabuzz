@@ -14,6 +14,11 @@ let Router = require('./src/router');
 let Host = require('./src/host');
 let Player = require('./src/player');
 
+let bodyParser = require('body-parser')
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+
 app.use('/public', express.static(__dirname + '/public/'));
 
 app.engine('.hbs', exphbs({
@@ -22,26 +27,32 @@ app.engine('.hbs', exphbs({
 }));
 app.set('view engine', '.hbs');
 
-app.get('/', function (req, res) {
+app.get('/', function(req, res) {
   res.render('home');
 });
 
-app.get('/join', function (req, res) {
-  let name = req.query.name;
-  let code = req.query.code;
+app.post('/join', function(req, res) {
+  let name = req.body.name;
+  let code = req.body.code;
   db.games.join(code, name)
-  .then(function() {
+  .then(function(id) {
     pub.publish(`game_${code}`, JSON.stringify({
       url: 'playersChanged',
     }));
-    res.render('join', {
-      code: code,
-    });
+    res.redirect(`/join?id=${id}`);
   })
   .catch(function(e) {
+    console.error(e.stack);
     res.render('error', {
       e: e,
     })
+  });
+});
+
+app.get('/join', function(req, res) {
+  let id = req.query.id;
+  res.render('join', {
+    id: id,
   });
 });
 
@@ -53,7 +64,7 @@ app.post('/host', function(req, res) {
   });
 });
 
-app.get('/host', function (req, res) {
+app.get('/host', function(req, res) {
   let code = req.query.code;
   res.render('host', {
     code: code,
@@ -69,10 +80,7 @@ io.on('connection', function(socket) {
   });
 
   socket.on('player', function(m) {
-    if (!players[m.code]) {
-      players[m.code] = [];
-    }
-    players[m.code].push(new Player(socket, m.code, pub));
+    players[m.id] = new Player(socket, m.id, pub);
  });
 });
 

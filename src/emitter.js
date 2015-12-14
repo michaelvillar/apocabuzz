@@ -12,9 +12,7 @@ emitter.emit = function(to, name, message) {
 emitter.sendPlayers = function(to, code) {
   db.players.list(code).then(function(players) {
     emitter.emit(to, 'playersChanged', {
-      players: players.map(function(name) {
-        return { name: name }
-      }),
+      players: players,
     })
   });
 };
