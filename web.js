@@ -34,7 +34,8 @@ app.get('/', function(req, res) {
 app.post('/join', function(req, res) {
   let name = req.body.name;
   let code = req.body.code;
-  db.games.join(code, name)
+  let team = req.body.team;
+  db.games.join(code, name, team)
   .then(function(id) {
     pub.publish(`game_${code}`, JSON.stringify({
       url: 'playersChanged',

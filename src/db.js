@@ -37,7 +37,7 @@ db.games.setState = function(code, state) {
   return client.hset(`game_${code}`, 'state', state);
 }
 
-db.games.join = function(code, name) {
+db.games.join = function(code, name, team) {
   return db.games.isExisting(code)
   .then(function(exists) {
     if (!exists) {
@@ -53,7 +53,7 @@ db.games.join = function(code, name) {
     return findNextPlayerId();
   })
   .then(function(id) {
-    return db.players.create(id, name, code).then(function() {
+    return db.players.create(id, name, code, team).then(function() {
       return id;
     });
   }).then(function(id) {
@@ -92,8 +92,12 @@ db.players.isExisting = function(id) {
   return client.exists(`player_${id}`);
 };
 
-db.players.create = function(id, name, code) {
-  return client.hmset(`player_${id}`, 'name', name, 'code', code);
+db.players.create = function(id, name, code, team) {
+  return client.hmset(`player_${id}`, {
+    name: name,
+    code: code,
+    team: team,
+  });
 };
 
 db.players.get = function(id) {
