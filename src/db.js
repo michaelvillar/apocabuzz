@@ -1,5 +1,6 @@
 let client = require('./redis')();
 let stringRand = require('./string_rand');
+let beeNames = require('./bee_names');
 
 let findNextPlayerId = function() {
   let id = stringRand(12).toUpperCase();
@@ -15,6 +16,7 @@ let findNextPlayerId = function() {
 let db = {
   games: {},
   players: {},
+  bees: {},
 };
 
 db.games.isExisting = function(code) {
@@ -70,6 +72,14 @@ db.games.getScore = function(code) {
   });
 };
 
+db.games.getCurrentBee = function(code) {
+  return client.hget(`game_${code}`, 'bee_id')
+  .then(function(bee_id) {
+    bee_id = parseInt(bee_id || -1);
+    return db.bees.get(code, bee_id);
+  });
+};
+
 db.players.list = function(code) {
   return client.lrange(`game_${code}_players`, 0, -1).then(function(ids) {
     return Promise.all(ids.map(function(id) {
@@ -91,6 +101,27 @@ db.players.get = function(id) {
     res.id = id;
     return res;
   });
+};
+
+db.bees.create = function(code) {
+  let bee = {
+    name: beeNames.rand(),
+  };
+
+  return client.hget(`game_${code}`, 'bee_id')
+  .then(function(bee_id) {
+    bee.id = parseInt(bee_id || -1) + 1;
+    return client.hmset(`game_${code}_bee_${bee.id}`, bee);
+  })
+  .then(function() {
+    return client.hset(`game_${code}`, 'bee_id', bee.id).then(function() {
+      return bee;
+    })
+  });
+};
+
+db.bees.get = function(code, id) {
+  return client.hgetall(`game_${code}_bee_${id}`);
 };
 
 module.exports = db;

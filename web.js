@@ -76,6 +76,9 @@ let hosts = {};
 let players = {};
 io.on('connection', function(socket) {
   socket.on('host', function(m) {
+    if (hosts[m.code]) {
+      hosts[m.code].disconnect();
+    }
     hosts[m.code] = new Host(socket, m.code, pub);
   });
 
@@ -89,7 +92,7 @@ let router = new Router(hosts, players);
 sub.psubscribe('game_*');
 sub.on('pmessage', function(pattern, channel, message) {
   let m = JSON.parse(message);
-  router[m.url](channel.replace('game_', ''));
+  router[m.url](channel.replace('game_', ''), m);
 });
 
 console.log("Running on :3000");

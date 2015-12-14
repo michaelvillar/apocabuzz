@@ -19,7 +19,11 @@
 <section class="state game">
   <div class="hive blue">
     <h2>Blue hive</h2>
-    <div class="hive-content"></div>
+    <div class="hive-content">
+      <script type="text/x-handlebars" id="template-hive">
+      \{{score}} bees
+      </script>
+    </div>
   </div>
 
   <div class="hive green">
@@ -29,12 +33,19 @@
 
   <div class="bee">
     <h2>Current bee</h2>
+    <div class="bee-content">
+      <script type="text/x-handlebars" id="template-bee">
+      \{{#if name}}
+        ID: \{{id}}<br>
+        Name: \{{name}}<br>
+        Bee or Zombee??
+      \{{else}}
+        Get ready!
+      \{{/if}}
+      </script>
+    </div>
   </div>
 </section>
-
-<script type="text/x-handlebars" id="template-hive">
-\{{score}} bees
-</script>
 
 <script>
 runHost('{{code}}');

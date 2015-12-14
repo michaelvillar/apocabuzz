@@ -9,17 +9,21 @@ Router.prototype.playersChanged = function(code) {
   emitter.sendPlayers(this.hosts[code], code);
 };
 Router.prototype.gameStateChanged = function(code) {
-  db.players.list(code).then((players) => {
-    for (let i = 0; i < players.length; i++) {
-      let player = players[i];
-      let id = player.id;
-      if (this.players[id]) {
-        emitter.sendGameState(this.players[id], player.code);
-      }
-    }
-  });
-
+  emitter.sendGameState(this._getGamePlayers(code), code);
   emitter.sendGameState(this.hosts[code], code);
 };
+Router.prototype.beeChanged = function(code, res) {
+  emitter.sendBee(this._getGamePlayers(code), code, res.bee.id);
+  emitter.sendBee(this.hosts[code], code, res.bee.id);
+};
+
+Router.prototype._getGamePlayers = function(code, fn) {
+  return db.players.list(code).then((players) => {
+    return players.map((player) => {
+      return this.players[player.id];
+    });
+  });
+}
+
 
 module.exports = Router;

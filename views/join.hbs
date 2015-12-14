@@ -3,8 +3,19 @@
 </section>
 
 <section class="state game">
-  <button class="button-bee">Bee</button>
-  <button class="button-zombee">Zombee</button>
+  <header>
+    <script type="text/x-handlebars" id="template-bee">
+    \{{#if name}}
+      Vote for: \{{name}}
+    \{{else}}
+      Get ready!
+    \{{/if}}
+    </script>
+  </header>
+  <div class="controls">
+    <button class="button-bee">Bee</button>
+    <button class="button-zombee">Zombee</button>
+  </div>
 </section>
 
 <script>

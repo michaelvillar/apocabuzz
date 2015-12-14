@@ -2,6 +2,11 @@ let db = require('./db');
 
 let emitter = {};
 emitter.emit = function(to, name, message) {
+  if (to instanceof Promise) {
+    return to.then(function(to) {
+      emitter.emit(to, name, message);
+    });
+  }
   if (!(to instanceof Array)) {
     to = [to];
   }
@@ -29,6 +34,17 @@ emitter.sendScore = function(to, code) {
       blue: score.blue,
       green: score.green,
     });
+  });
+};
+emitter.sendBee = function(to, code, id) {
+  db.bees.get(code, id).then(function(bee) {
+    emitter.emit(to, 'beeChanged', bee);
+  });
+};
+
+emitter.sendCurrentBee = function(to, code) {
+  db.games.getCurrentBee(code).then(function(bee) {
+    emitter.emit(to, 'beeChanged', bee);
   });
 };
 

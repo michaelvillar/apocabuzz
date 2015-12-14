@@ -29,6 +29,7 @@ let runHost = function(code) {
   let templates = {
     players: createTemplate('players'),
     hive: createTemplate('hive'),
+    bee: createTemplate('bee'),
   };
 
   hideStates();
@@ -37,12 +38,15 @@ let runHost = function(code) {
   router.gameState = function(m) {
     showState(m.state);
   };
-  router.playersChanged = function (m) {
+  router.playersChanged = function(m) {
     document.querySelector('.players').innerHTML = templates.players(m);
   };
-  router.scoreChanged = function (m) {
+  router.scoreChanged = function(m) {
     document.querySelector('.hive.blue .hive-content').innerHTML = templates.hive({ score: m.blue });
     document.querySelector('.hive.green .hive-content').innerHTML = templates.hive({ score: m.green });
+  };
+  router.beeChanged = function(m) {
+    document.querySelector('.bee-content').innerHTML = templates.bee(m);
   };
 
   let socket = createSocket(router);
@@ -53,11 +57,20 @@ let runHost = function(code) {
 };
 
 let runPlayer = function(id) {
+  let templates = {
+    bee: createTemplate('bee'),
+  };
+
   hideStates();
 
   let router = {};
   router.gameState = function(m) {
     showState(m.state);
+  };
+  router.beeChanged = function(m) {
+    console.log('beeChanged', m);
+    let header = document.querySelector('header');
+    header.innerHTML = templates.bee(m);
   };
 
   let socket = createSocket(router);
