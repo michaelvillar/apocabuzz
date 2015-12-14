@@ -28,6 +28,7 @@ let showState = function(state) {
 let runHost = function(code) {
   let templates = {
     players: createTemplate('players'),
+    hive: createTemplate('hive'),
   };
 
   hideStates();
@@ -38,6 +39,10 @@ let runHost = function(code) {
   };
   router.playersChanged = function (m) {
     document.querySelector('.players').innerHTML = templates.players(m);
+  };
+  router.scoreChanged = function (m) {
+    document.querySelector('.hive.blue .hive-content').innerHTML = templates.hive({ score: m.blue });
+    document.querySelector('.hive.green .hive-content').innerHTML = templates.hive({ score: m.green });
   };
 
   let socket = createSocket(router);

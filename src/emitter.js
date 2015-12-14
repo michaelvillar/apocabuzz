@@ -23,5 +23,13 @@ emitter.sendGameState = function(to, code) {
     });
   });
 };
+emitter.sendScore = function(to, code) {
+  db.games.getScore(code).then(function(score) {
+    emitter.emit(to, 'scoreChanged', {
+      blue: score.blue,
+      green: score.green,
+    });
+  });
+};
 
 module.exports = emitter;

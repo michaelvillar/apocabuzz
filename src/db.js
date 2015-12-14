@@ -61,6 +61,15 @@ db.games.join = function(code, name) {
   });
 };
 
+db.games.getScore = function(code) {
+  return client.hmget(`game_${code}`, 'score_blue', 'score_green').then(function(res) {
+    return {
+      blue: res.score_blue || 0,
+      green: res.score_green || 0,
+    };
+  });
+};
+
 db.players.list = function(code) {
   return client.lrange(`game_${code}_players`, 0, -1).then(function(ids) {
     return Promise.all(ids.map(function(id) {
