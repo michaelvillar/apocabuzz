@@ -92,8 +92,23 @@ let router = new Router(hosts, players);
 
 sub.psubscribe('game_*');
 sub.on('pmessage', function(pattern, channel, message) {
-  let m = JSON.parse(message);
-  router[m.url](channel.replace('game_', ''), m);
+  try {
+    let m = JSON.parse(message);
+    let code = channel.replace('game_', '');
+    let host = hosts[code];
+    let method = router[m.url];
+    if (host && method) {
+      let result = method.call(router, host, m);
+      if (result instanceof Promise) {
+        result.catch(function(e) {
+          console.error(e.stack);
+        });
+      }
+    }
+  }
+  catch (e) {
+    console.error(e.stack);
+  }
 });
 
 console.log("Running on :3000");

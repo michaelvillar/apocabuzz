@@ -17,6 +17,7 @@ let db = {
   games: {},
   players: {},
   bees: {},
+  votes: {},
 };
 
 db.games.isExisting = function(code) {
@@ -110,6 +111,7 @@ db.players.get = function(id) {
 db.bees.create = function(code) {
   let bee = {
     name: beeNames.rand(),
+    zombee: Math.round(Math.random()) == 1,
   };
 
   return client.hget(`game_${code}`, 'bee_id')
@@ -126,6 +128,36 @@ db.bees.create = function(code) {
 
 db.bees.get = function(code, id) {
   return client.hgetall(`game_${code}_bee_${id}`);
+};
+
+db.votes.list = function(code, bee_id) {
+  return client.lrange(`game_${code}_bee_${bee_id}_votes`, 0, -1).then(function(ids) {
+    return Promise.all(ids.map(function(player_id) {
+      return db.votes.get(code, bee_id, player_id);
+    }));
+  });
+};
+
+db.votes.get = function(code, bee_id, player_id) {
+  return client.hgetall(`game_${code}_bee_${bee_id}_vote_${player_id}`).then(function(res) {
+    res.player_id = player_id;
+    return res;
+  });
+};
+
+db.votes.create = function(code, bee_id, type, player_id) {
+  return client.exists(`game_${code}_bee_${bee_id}_vote_${player_id}`)
+  .then(function(exists) {
+    // if (exists) {
+    //   throw new Error("You already voted");
+    // }
+    return client.hmset(`game_${code}_bee_${bee_id}_vote_${player_id}`, {
+      type: type,
+    });
+  })
+  .then(function() {
+    return client.rpush(`game_${code}_bee_${bee_id}_votes`, player_id);
+  });
 };
 
 module.exports = db;

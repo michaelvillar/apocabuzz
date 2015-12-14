@@ -34,6 +34,15 @@ Player.prototype.init = function() {
       url: 'gameStart',
     }));
   });
+
+  this.socket.on('vote', (data) => {
+    this.pub.publish(`game_${this.code}`, JSON.stringify({
+      url: 'vote',
+      bee_id: data.bee_id,
+      type: data.type,
+      player_id: this.id,
+    }));
+  })
 };
 
 module.exports = Player;

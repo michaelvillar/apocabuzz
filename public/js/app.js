@@ -64,13 +64,16 @@ let runPlayer = function(id) {
 
   hideStates();
 
+  let currentBee = null;
+
   let router = {};
   router.gameState = function(m) {
     showState(m.state);
   };
-  router.beeChanged = function(m) {
+  router.beeChanged = function(bee) {
     let el = document.querySelector('.vote');
-    el.innerHTML = templates.bee(m);
+    el.innerHTML = templates.bee(bee);
+    currentBee = bee;
   };
   router.player = function(player) {
     let el = document.querySelector('.player');
@@ -85,5 +88,19 @@ let runPlayer = function(id) {
 
   document.querySelector('.button-start').addEventListener('click', function() {
     socket.emit('start');
+  });
+
+  let vote = function(type) {
+    socket.emit('vote', {
+      bee_id: currentBee.id,
+      type: type,
+    });
+  };
+
+  document.querySelector('.button-bee').addEventListener('click', function() {
+    vote('bee');
+  });
+  document.querySelector('.button-zombee').addEventListener('click', function() {
+    vote('zombee');
   });
 };
