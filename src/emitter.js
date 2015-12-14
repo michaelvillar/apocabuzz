@@ -26,9 +26,20 @@ emitter.sendPlayer = function(to, player) {
 };
 emitter.sendGameState = function(to, code) {
   db.games.getState(code).then(function(state) {
-    emitter.emit(to, 'gameState', {
+    let res = {
       state: state,
-    });
+    }
+    if (state === 'end') {
+      return db.games.getWinner(code)
+      .then(function(winner) {
+        res.winner = winner;
+        return res;
+      });
+    }
+    return res;
+  })
+  .then(function(res) {
+    emitter.emit(to, 'gameState', res);
   });
 };
 emitter.sendScore = function(to, code) {

@@ -31,6 +31,7 @@ let runHost = function(code) {
     hive: createTemplate('hive'),
     bee: createTemplate('bee'),
     vote: createTemplate('vote'),
+    winner: createTemplate('winner'),
   };
 
   hideStates();
@@ -38,6 +39,9 @@ let runHost = function(code) {
   let router = {};
   router.gameState = function(m) {
     showState(m.state);
+    if (m.state === 'end') {
+      document.querySelector('.winner-content').innerHTML = templates.winner(m);
+    }
   };
   router.playersChanged = function(m) {
     document.querySelector('.players').innerHTML = templates.players(m);

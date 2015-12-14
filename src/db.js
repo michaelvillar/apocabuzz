@@ -36,7 +36,15 @@ db.games.getState = function(code) {
 
 db.games.setState = function(code, state) {
   return client.hset(`game_${code}`, 'state', state);
-}
+};
+
+db.games.getWinner = function(code) {
+  return client.hget(`game_${code}`, 'winner');
+};
+
+db.games.setWinner = function(code, winner) {
+  return client.hset(`game_${code}`, 'winner', winner);
+};
 
 db.games.join = function(code, name, team) {
   return db.games.isExisting(code)

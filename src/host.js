@@ -170,7 +170,29 @@ Host.prototype.vote = function(data) {
         url: 'scoreChanged',
       }));
 
-      return this.nextBee();
+      return db.games.getScore(this.code);
+    })
+    .then((scores) => {
+      let maxScore = 10;
+      if (scores.blue >= maxScore || scores.green >= maxScore) {
+        // game is done
+        let winner = 'green';
+        if (scores.blue > scores.green) {
+          winner = 'blue';
+        }
+
+        return db.games.setWinner(this.code, winner)
+        .then(() => {
+          return db.games.setState(this.code, 'end');
+        })
+        .then(() => {
+          this.pub.publish(`game_${this.code}`, JSON.stringify({
+            url: 'gameStateChanged',
+          }));
+        });
+      } else {
+        return this.nextBee();
+      }
     });
   })
 };
