@@ -10,13 +10,10 @@ let Host = function(socket, code, pub) {
   emitter.sendGameState(this, this.code);
   emitter.sendCurrentBee(this, this.code);
   emitter.sendScore(this, this.code);
+};
 
-  this.runloop = setInterval(() => {
-    this.nextBee()
-    .catch(function(e) {
-      console.error(e.stack);
-    });
-  }, 2500);
+Host.prototype.start = function() {
+  this.nextBee();
 };
 
 Host.prototype.nextBee = function() {

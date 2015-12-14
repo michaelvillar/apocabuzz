@@ -59,6 +59,7 @@ let runHost = function(code) {
 let runPlayer = function(id) {
   let templates = {
     bee: createTemplate('bee'),
+    player: createTemplate('player'),
   };
 
   hideStates();
@@ -68,9 +69,12 @@ let runPlayer = function(id) {
     showState(m.state);
   };
   router.beeChanged = function(m) {
-    console.log('beeChanged', m);
-    let header = document.querySelector('header');
-    header.innerHTML = templates.bee(m);
+    let el = document.querySelector('.vote');
+    el.innerHTML = templates.bee(m);
+  };
+  router.player = function(player) {
+    let el = document.querySelector('.player');
+    el.innerHTML = templates.player(player);
   };
 
   let socket = createSocket(router);

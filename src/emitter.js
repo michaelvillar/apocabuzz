@@ -21,6 +21,9 @@ emitter.sendPlayers = function(to, code) {
     })
   });
 };
+emitter.sendPlayer = function(to, player) {
+  emitter.emit(to, 'player', player);
+};
 emitter.sendGameState = function(to, code) {
   db.games.getState(code).then(function(state) {
     emitter.emit(to, 'gameState', {

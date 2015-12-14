@@ -12,6 +12,12 @@ Router.prototype.gameStateChanged = function(code) {
   emitter.sendGameState(this._getGamePlayers(code), code);
   emitter.sendGameState(this.hosts[code], code);
 };
+Router.prototype.gameStart = function(code) {
+  let host = this.hosts[code];
+  if (host) {
+    host.start();
+  }
+};
 Router.prototype.beeChanged = function(code, res) {
   emitter.sendBee(this._getGamePlayers(code), code, res.bee.id);
   emitter.sendBee(this.hosts[code], code, res.bee.id);

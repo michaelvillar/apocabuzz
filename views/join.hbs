@@ -3,7 +3,12 @@
 </section>
 
 <section class="state game">
-  <header>
+  <div class="player">
+    <script type="text/x-handlebars" id="template-player">
+    <div class="player-name team-\{{team}}">\{{name}}</div>
+    </script>
+  </div>
+  <div class="vote">
     <script type="text/x-handlebars" id="template-bee">
     \{{#if name}}
       Vote for: \{{name}}
@@ -11,7 +16,7 @@
       Get ready!
     \{{/if}}
     </script>
-  </header>
+  </div>
   <div class="controls">
     <button class="button-bee">Bee</button>
     <button class="button-zombee">Zombee</button>
