@@ -152,14 +152,20 @@
   align-items: center;
 }
 
-.bee {
+.bee-container {
   position: relative;
-  width: 284px;
-  height: 360px;
 }
 
-.bee > * {
+.bee-container * {
   position: absolute;
+}
+
+.bee-container,
+.bee,
+.bee-in {
+  width: 284px;
+  height: 360px;
+  transform-origin: 50% 40%;
 }
 
 .bee-body {
@@ -178,11 +184,16 @@
   top: 26px;
 }
 
+.bee-wings {
+  perspective: 600;
+}
+
 .bee-left-wings {
   background: url(/public/img/bee/left-wings.svg) no-repeat;
   width: 143px;
   height: 102px;
   top: 151px;
+  transform-origin: 80% 80%;
 }
 
 .bee-right-wings {
@@ -191,6 +202,7 @@
   height: 102px;
   left: 143px;
   top: 151px;
+  transform-origin: 20% 80%;
 }
 
 .bee-left-antenna {

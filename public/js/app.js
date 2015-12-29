@@ -150,7 +150,66 @@ let showBulletin = function(options = {}) {
     if (options.complete)
       options.complete();
   }, 4800);
-}
+};
+
+let showBee = function(options = {}) {
+  let gameStateEl = document.querySelector('.game-state.bee-state');
+
+  let floatBee = function() {
+    let el = document.querySelector('.bee');
+    dynamics.animate(el, {
+      translateY: Math.round(Math.random() * 50 - 25),
+      translateX: Math.round(Math.random() * 10 - 5),
+    }, {
+      type: dynamics.easeInOut,
+      duration: Math.round(Math.random() * 1000 + 3000),
+      friction: 250,
+      complete: function() {
+        floatBee();
+      },
+    });
+  };
+
+  let buzzBee = function() {
+    let el = document.querySelector('.bee-in');
+    let duration = Math.random() * 250 + 250;
+    dynamics.animate(el, {
+      rotateZ: Math.round(Math.random() + 0.5),
+    }, {
+      type: dynamics.bezier,
+      points: [{"x":0,"y":0,"cp":[{"x":0.225,"y":1.82}]},{"x":0.28,"y":-0.378,"cp":[{"x":0.18,"y":-0.378},{"x":0.38,"y":-0.378}]},{"x":0.462,"y":0.743,"cp":[{"x":0.362,"y":0.743},{"x":0.562,"y":0.743}]},{"x":0.639,"y":-0.396,"cp":[{"x":0.539,"y":-0.396},{"x":0.739,"y":-0.396}]},{"x":0.795,"y":0.647,"cp":[{"x":0.695,"y":0.647},{"x":0.895,"y":0.647}]},{"x":1,"y":0,"cp":[{"x":0.9,"y":0}]}],
+      duration: duration,
+      delay: Math.random() * 1500 + 1000,
+      complete: buzzBee,
+    });
+  };
+
+  let animateWings = function() {
+    let els = document.querySelectorAll('.bee-wings *');
+    let duration = Math.random() * 1500 + 500;
+    for (let i = 0; i < els.length; i++) {
+      dynamics.animate(els[i], {
+        rotateY: i == 0 ? -33 : 33,
+      }, {
+        type: dynamics.bezier,
+        points: [{"x":0,"y":0,"cp":[{"x":0.225,"y":1.82}]},{"x":0.28,"y":-0.378,"cp":[{"x":0.18,"y":-0.378},{"x":0.38,"y":-0.378}]},{"x":0.462,"y":0.743,"cp":[{"x":0.362,"y":0.743},{"x":0.562,"y":0.743}]},{"x":0.639,"y":-0.396,"cp":[{"x":0.539,"y":-0.396},{"x":0.739,"y":-0.396}]},{"x":0.795,"y":0.647,"cp":[{"x":0.695,"y":0.647},{"x":0.895,"y":0.647}]},{"x":1,"y":0,"cp":[{"x":0.9,"y":0}]}],
+        duration: duration,
+      });
+    }
+
+    dynamics.setTimeout(function() {
+      animateWings();
+    }, duration + Math.random() * 1000);
+  };
+
+  dynamics.css(gameStateEl, {
+    display: '',
+  });
+
+  animateWings();
+  floatBee();
+  buzzBee();
+};
 
 let runHost = function(code) {
   document.body.classList.add('app-host');
@@ -167,15 +226,8 @@ let runHost = function(code) {
   hideGameStates();
 
   setTimeout(function() {
-    showBulletin({
-      bulletin: 'Every bee younger than 2 days is now banned',
-      complete: function() {
-        showBulletin({
-          bulletin: 'J/K!',
-        });
-      }
-    });
-  }, 1000);
+    showBee();
+  }, 500);
 
   let router = {};
   router.gameState = function(m) {
