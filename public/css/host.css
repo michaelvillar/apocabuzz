@@ -1,0 +1,391 @@
+.state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.state.init .logo {
+  width: 40%;
+  height: 17%;
+  margin-top: 5vh;
+}
+
+/* Enter screen */
+.players {
+  margin: 7vh 0;
+  display: flex;
+  width: 75%;
+  height: 50vh;
+  flex-shrink: 0;
+  justify-content: space-between;
+}
+
+.players-vs {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  color: white;
+  font-size: 3.5vmax;
+  font-family: "DIN-BoldAlternate";
+  text-align: center;
+}
+
+.players-column {
+  width: 32vw;
+}
+
+.green-team, .blue-team {
+  padding: 16px 0;
+  color: #FFE20A;
+  font-size: 36px;
+  font-size: 3.5vmax;
+  font-family: "DIN-BoldAlternate";
+  text-align: center;
+  border: 2px solid #FFE90A;
+}
+
+.green-team {
+  background: #58D805;
+}
+
+.blue-team {
+  background: #04AED9;
+}
+
+.players ul {
+  list-style: none;
+}
+
+.players .player {
+  padding: 8px 0;
+  background: rgba(8, 8, 8, .6);
+  color: #FFE20A;
+  font-size: 2.5vmax;
+  font-family: "DIN-BoldAlternate";
+  text-align: center;
+  border: 2px solid #FFE90A;
+  border-top: none;
+}
+
+.code-information {
+  margin-bottom: 6vh;
+  color: white;
+  font-size: 2.5vmax;
+  font-family: "DIN-BoldAlternate";
+}
+
+.code-information span {
+  color: #825F09;
+  font-family: "DIN-BoldAlternate";
+}
+
+.code-information span.code {
+  color: #FD6615;
+}
+
+/* Game */
+.hives {
+  display: flex;
+  width: 75%;
+  height: auto;
+  flex-shrink: 0;
+  justify-content: space-between;
+}
+
+.green-hive, .blue-hive {
+  width: 32vw;
+  height: 32vw;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.green-hive {
+  background-image: url(/public/img/hive-green.png);
+}
+
+.blue-hive {
+  background-image: url(/public/img/hive-blue.png);
+}
+
+.state.game .players {
+  height: auto;
+  margin-top: 0;
+}
+
+/* Bee */
+.game-state.bee-state {
+  background: url(/public/img/background-stripes.png) no-repeat;
+  background-size: cover;
+  background-position: center center;
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column;
+}
+
+.bee-content {
+  display: flex;
+  justify-content: space-between;
+}
+
+.bee-information {
+  width: 35vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 5vh 0 0 10vh;
+}
+
+.bee-information-line {
+  position: relative;
+  font-size: 4vh;
+  display: block;
+}
+
+.bee-center {
+  width: 30vw;
+  height: 70vh;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bee {
+  position: relative;
+  width: 284px;
+  height: 360px;
+}
+
+.bee > * {
+  position: absolute;
+}
+
+.bee-body {
+  background: url(/public/img/bee/body.svg) no-repeat;
+  width: 122px;
+  height: 173px;
+  left: 81px;
+  top: 103px;
+}
+
+.bee-head {
+  background: url(/public/img/bee/head.svg) no-repeat;
+  width: 199px;
+  height: 200px;
+  left: 44px;
+  top: 26px;
+}
+
+.bee-left-wings {
+  background: url(/public/img/bee/left-wings.svg) no-repeat;
+  width: 143px;
+  height: 102px;
+  top: 151px;
+}
+
+.bee-right-wings {
+  background: url(/public/img/bee/right-wings.svg) no-repeat;
+  width: 143px;
+  height: 102px;
+  left: 143px;
+  top: 151px;
+}
+
+.bee-left-antenna {
+  background: url(/public/img/bee/left-antenna.svg) no-repeat;
+  width: 50px;
+  height: 56px;
+  left: 71px;
+  top: 0px;
+}
+
+.bee-right-antenna {
+  background: url(/public/img/bee/right-antenna.svg) no-repeat;
+  width: 50px;
+  height: 56px;
+  left: 167px;
+  top: 0px;
+}
+
+.bee-left-hand {
+  background: url(/public/img/bee/left-hand.svg) no-repeat;
+  width: 30px;
+  height: 31px;
+  left: 65px;
+  top: 196px;
+}
+
+.bee-right-hand {
+  background: url(/public/img/bee/right-hand.svg) no-repeat;
+  width: 28px;
+  height: 29px;
+  left: 187px;
+  top: 201px;
+}
+
+.bee-left-eye {
+  background: url(/public/img/bee/left-eye.svg) no-repeat;
+  width: 25px;
+  height: 23px;
+  left: 103px;
+  top: 104px;
+}
+
+.bee-right-eye {
+  background: url(/public/img/bee/right-eye.svg) no-repeat;
+  width: 25px;
+  height: 23px;
+  left: 158px;
+  top: 104px;
+}
+
+.bee-mouth {
+  background: url(/public/img/bee/mouth.svg) no-repeat;
+  width: 65px;
+  height: 19px;
+  left: 112px;
+  top: 169px;
+}
+
+.bee-shadow {
+  background: url(/public/img/bee/shadow.svg) no-repeat;
+  width: 119px;
+  height: 41px;
+  left: 82px;
+  top: 315px;
+}
+
+.bee-chat {
+  width: 35vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 10vh 0 5vh;
+}
+
+.bee-chat-bubble {
+  position: relative;
+  background: white;
+  font-size: 3vh;
+  padding: 2.5vh;
+  display: inline-block;
+  max-width: 80%;
+}
+
+.bee-information, .bee-chat {
+  color: #825F09;
+}
+
+.bee-information span, .bee-chat span {
+  color: #FA4F13;
+  font-family: "DIN-BoldAlternate";
+}
+
+.votes {
+  padding-bottom: 3vh;
+  padding-top: 5vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.votes h2 {
+  color: #825F09;
+  font-size: 3vh;
+  font-family: "DIN-BoldAlternate";
+  margin-bottom: 0.8vh;
+}
+
+.votes-content {
+
+}
+
+.vote {
+  width: 5vh;
+  height: 5vh;
+  border: 0.5vh solid white;
+  border-radius: 50%;
+  display: inline-block;
+  margin: 0.8vh;
+}
+
+.vote.green {
+  border: 0;
+  background: #58D805;
+}
+
+.vote.blue {
+  border: 0;
+  background: #04AED9;
+}
+
+/* Bulletin */
+.game-state.bulletin {
+}
+
+.bulletin-background-fader,
+.bulletin-gradient,
+.bulletin-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.bulletin-background-fader {
+  background: rgba(255, 172, 0, 1.0);
+}
+
+.bulletin-gradient {
+  opacity: 0.79;
+  background-image: radial-gradient(48% 60%, rgba(255,4,205,0.18) 56%, rgba(255,10,142,0.57) 100%);
+}
+
+.bulletin-content {
+  z-index: 10;
+  perspective: 2000;
+}
+
+.bulletin h1 {
+  position: absolute;
+  top: 23vh;
+  left: 45vw;
+  background: #D31F37;
+  color: white;
+  font-size: 6vw;
+  font-family: "DIN-BoldAlternate";
+  display: inline-block;
+  padding: 2vw 3.4vw;
+  transform: rotateX(-95deg);
+  transform-origin: 0 0 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.bulletin p {
+  position: absolute;
+  top: 48vh;
+  left: 10vw;
+  background: white;
+  color: #825F09;
+  font-size: 4vw;
+  font-family: "DIN-BoldAlternate";
+  display: inline-block;
+  padding: 2vw 3.4vw;
+  max-width: 60vw;
+  transform: rotateX(-95deg);
+  transform-origin: 0 0 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.bulletin-background-zombee {
+  position: absolute;
+  background: url(/public/img/zombee.svg) no-repeat;
+  width: 140px;
+  height: 147px;
+}

@@ -1,0 +1,23 @@
+{
+  "name": "zombie",
+  "description": "",
+  "main": "",
+  "authors": [
+    "Michael Villar <me@michaelvillar.com>"
+  ],
+  "license": "MIT",
+  "moduleType": [
+    "globals"
+  ],
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "dynamics.js": "~0.0.9"
+  }
+}

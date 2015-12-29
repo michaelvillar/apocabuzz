@@ -1,3 +1,39 @@
+@font-face {
+  font-family: DIN-BoldAlternate;
+  src: url(/public/fonts/DIN-BoldAlternate.otf) format("opentype");
+}
+
+@font-face {
+  font-family: DIN-MediumAlternate;
+  src: url(/public/fonts/DIN-MediumAlternate.otf) format("opentype");
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  font-family: "DIN-MediumAlternate";
+  text-transform: uppercase;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  background: url(/public/img/background.png) no-repeat;
+  background-size: cover;
+  background-position: center center;
+}
+
+.logo {
+  display: block;
+  background: url(/public/img/logo.png) no-repeat;
+  background-size: contain;
+  background-position: center center;
+}
+
 .team-green {
   background: green;
   color: white;
@@ -5,4 +41,12 @@
 .team-blue {
   background: blue;
   color: white;
+}
+
+section {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }

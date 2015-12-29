@@ -1,63 +1,96 @@
-<h1>Apocalibuzz</h1>
-
+<link rel="stylesheet" type="text/css" href="/public/css/host.css">
 <section class="state init">
-  <h2>Code</h2>
-  <div class="code">{{code}}</div>
+  <div class="logo"></div>
 
-  <h2>Players</h2>
   <div class="players">
+    <div class="players-column green">
+      <div class="green-team">Green Team</div>
+      <div class="players-content"></div>
+    </div>
+    <div class="players-vs">VS</div>
+    <div class="players-column blue">
+      <div class="blue-team">Blue Team</div>
+      <div class="players-content"></div>
+    </div>
     <script type="text/x-handlebars" id="template-players">
     <ul>
     \{{#each players}}
-      <li class="player team-\{{team}}">\{{name}}</li>
+      <li class="player">\{{name}}</li>
     \{{/each}}
     </ul>
     </script>
   </div>
+
+  <h2 class="code-information">Join the game on <span>Apocabuzz.com</span> with code <span class="code">{{code}}</span></h2>
 </section>
 
 <section class="state game">
-  <div class="hive blue">
-    <h2>Blue hive</h2>
-    <div class="hive-content">
-      <script type="text/x-handlebars" id="template-hive">
-      \{{score}} bees
-      </script>
+  <div class="players">
+    <div class="players-column green">
+      <div class="green-team">Green Team</div>
+    </div>
+    <div class="players-vs">VS</div>
+    <div class="players-column blue">
+      <div class="blue-team">Blue Team</div>
     </div>
   </div>
 
-  <div class="hive green">
-    <h2>Green hive</h2>
-    <div class="hive-content"></div>
+  <div class="hives">
+     <div class="green-hive"></div>
+     <div class="blue-hive"></div>
   </div>
+</section>
 
-  <div class="bee">
-    <h2>Current bee</h2>
-    <div class="bee-content">
-      <script type="text/x-handlebars" id="template-bee">
-      \{{#if name}}
-        ID: \{{id}}<br>
-        Name: \{{name}}<br>
-        Bee or Zombee??
-      \{{else}}
-        Get ready!
-      \{{/if}}
-      </script>
+<section class="game-state bee-state">
+  <div class="bee-content">
+    <div class="bee-information">
+      <div class="bee-information-line" style="font-size:5vh;left:20%;margin-bottom:1vh;"><span>Buzz Aldrin</span></div>
+      <div class="bee-information-line" style="font-size:3vh;left:0%;margin-bottom:2vh;">Employment: <span>Worker</span></div>
+      <div class="bee-information-line" style="font-size:4vh;left:10%;margin-bottom:0;">Assigned: <span>Pollen</span></div>
+      <div class="bee-information-line" style="font-size:3vh;left:15%;margin-bottom:1vh;">Birth: <span>5d ago</span></div>
+      <div class="bee-information-line" style="font-size:4vh;left:0%;margin-bottom:0;">Speed: <span>5 flowers/min</span></div>
+    </div>
+    <div class="bee-center">
+      <div class="bee">
+        <div class="bee-left-wings"></div>
+        <div class="bee-right-wings"></div>
+        <div class="bee-body"></div>
+        <div class="bee-left-hand"></div>
+        <div class="bee-right-hand"></div>
+        <div class="bee-head"></div>
+        <div class="bee-left-antenna"></div>
+        <div class="bee-right-antenna"></div>
+        <div class="bee-left-eye"></div>
+        <div class="bee-right-eye"></div>
+        <div class="bee-mouth"></div>
+        <div class="bee-shadow"></div>
+      </div>
+    </div>
+    <div class="bee-chat">
+      <div class="bee-chat-bubble" style="left: 5vw;">Let me in, pleazzz...</div>
+      <div class="bee-chat-bubble" style="left: 0vw;">I just came back from the <span>marguerites</span> and I saw some weird bees there!</div>
+      <div class="bee-chat-bubble" style="left: 5vw;">Did my buddy <span>Lili</span> already enter? I think she turned into a <span>zombee</span>!!!</div>
     </div>
   </div>
-
-  <div class="vote">
-    <h2>Last vote</h2>
-    <div class="vote-content">
-      <script type="text/x-handlebars" id="template-vote">
-      Team \{{team}} voted \{{vote}}<br>
-      \{{#if right}}
-        They were RIGHT
-      \{{else}}
-        Hoh no, they were WRONG
-      \{{/if}}
-      </script>
+  <div class="votes">
+    <h2>Votes</h2>
+    <div class="votes-content">
+      <div class="vote green"></div>
+      <div class="vote"></div>
+      <div class="vote"></div>
+      <div class="vote blue"></div>
     </div>
+  </div>
+</section>
+
+<section class="game-state bulletin">
+  <div class="bulletin-background-fader">
+    <div class="bulletin-background"></div>
+    <div class="bulletin-gradient"></div>
+  </div>
+  <div class="bulletin-content">
+    <h1>Bumbletin</h1>
+    <p></p>
   </div>
 </section>
 
