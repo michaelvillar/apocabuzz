@@ -155,6 +155,17 @@ let showBulletin = function(options = {}) {
 let showBee = function(options = {}) {
   let gameStateEl = document.querySelector('.game-state.bee-state');
 
+  let showBee = function() {
+    let el = document.querySelector('.bee-container');
+    dynamics.animate(el, {
+      opacity: 1,
+      scale: 1,
+    }, {
+      friction: 100,
+      duration: 1000,
+    });
+  }
+
   let floatBee = function() {
     let el = document.querySelector('.bee');
     dynamics.animate(el, {
@@ -164,9 +175,7 @@ let showBee = function(options = {}) {
       type: dynamics.easeInOut,
       duration: Math.round(Math.random() * 1000 + 3000),
       friction: 250,
-      complete: function() {
-        floatBee();
-      },
+      complete: floatBee,
     });
   };
 
@@ -202,6 +211,100 @@ let showBee = function(options = {}) {
     }, duration + Math.random() * 1000);
   };
 
+  let animateMouth = function() {
+    let el = document.querySelectorAll('.bee-mouth');
+    dynamics.animate(el, {
+      scaleY: 0.5,
+    }, {
+      type: dynamics.bezier,
+      points: [{"x":0,"y":0,"cp":[{"x":0.124,"y":-0.01}]},{"x":0.517,"y":0.839,"cp":[{"x":0.223,"y":0.857},{"x":0.769,"y":0.839}]},{"x":1,"y":0,"cp":[{"x":0.85,"y":-0.002}]}],
+      duration: 200,
+      delay: Math.random() * 400,
+      complete: animateMouth,
+    })
+  };
+
+  let animateInfo = function() {
+    let animateLine = function(el) {
+      dynamics.animate(el, {
+        scale: 1 + (Math.random() - 0.5) / 4,
+        translateX: Math.round(Math.random() * 30 - 15),
+        translateY: Math.round(Math.random() * 4 - 2),
+      }, {
+        duration: 3000 + Math.random() * 4000,
+        complete: function() {
+          animateLine(el);
+        },
+      })
+    };
+    let els = document.querySelectorAll('.bee-information-line');
+    for (let i = 0; i < els.length; i++) {
+      animateLine(els[i]);
+    }
+  };
+
+  let showChatBubbles = function() {
+    let els = document.querySelectorAll('.bee-chat-bubble');
+    for (let i = 0; i < els.length; i++) {
+      dynamics.animate(els[i], {
+        rotateX: 0,
+      }, {
+        type: dynamics.spring,
+        delay: 1000 + i * 250,
+      });
+    }
+  };
+
+  let showInformation = function() {
+    let el = document.querySelector('.bee-information');
+    dynamics.animate(el, {
+      translateX: 0,
+      opacity: 1,
+      scale: 1,
+    }, {
+      friction: 100,
+      duration: 1000,
+      delay: 500,
+    });
+  };
+
+  let showVotes = function() {
+    let el = document.querySelector('.votes');
+    dynamics.animate(el, {
+      opacity: 1,
+    }, {
+      friction: 100,
+      duration: 500,
+      delay: 1000,
+    });
+  };
+
+  let infoEl = document.querySelector('.bee-information');
+  for (let i = 0; i < options.info.length; i++) {
+    let line = options.info[i];
+    let el = document.createElement('div');
+    el.classList.add('bee-information-line');
+    el.innerHTML = line;
+    dynamics.css(el, {
+      fontSize: `${Math.round(Math.random() * 4 + 2)}vh`,
+      left: `${Math.round(Math.random() * 20)}%`,
+      marginBottom: `${Math.round(Math.random() * 2)}vh`,
+    })
+    infoEl.appendChild(el);
+  }
+
+  let chatEl = document.querySelector('.bee-chat');
+  for (let i = 0; i < options.chat.length; i++) {
+    let line = options.chat[i];
+    let el = document.createElement('div');
+    el.classList.add('bee-chat-bubble');
+    el.innerHTML = line;
+    dynamics.css(el, {
+      left: `${i % 2 == 0 ? 5 : 0}vh`,
+    })
+    chatEl.appendChild(el);
+  }
+
   dynamics.css(gameStateEl, {
     display: '',
   });
@@ -209,6 +312,12 @@ let showBee = function(options = {}) {
   animateWings();
   floatBee();
   buzzBee();
+  animateMouth();
+  animateInfo();
+  showChatBubbles();
+  showInformation();
+  showBee();
+  showVotes();
 };
 
 let runHost = function(code) {
@@ -226,8 +335,27 @@ let runHost = function(code) {
   hideGameStates();
 
   setTimeout(function() {
-    showBee();
+    showBee({
+      info: [
+        '<span>Buzz Aldrin</span>',
+        'Employment: <span>Worker</span>',
+        'Assigned: <span>Pollen</span>',
+        'Birth: <span>5d ago</span>',
+        'Speed: <span>5 flowers/min</span>',
+      ],
+      chat: [
+        'Let me in, pleazzz...',
+        'I just came back from the <span>marguerites</span> and I saw some weird bees there!',
+        'Did my buddy <span>Lili</span> already enter? I think she turned into a <span>zombee</span>!!!</div>',
+      ],
+    });
   }, 500);
+
+  setTimeout(function() {
+    showBulletin({
+      bulletin: 'Every bee under 2d should be banned!',
+    });
+  }, 5000);
 
   let router = {};
   router.gameState = function(m) {

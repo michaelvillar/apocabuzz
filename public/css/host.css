@@ -154,6 +154,8 @@
 
 .bee-container {
   position: relative;
+  transform: scale(.5);
+  opacity: 0;
 }
 
 .bee-container * {
@@ -275,6 +277,7 @@
   flex-direction: column;
   justify-content: center;
   padding: 0 10vh 0 5vh;
+  perspective: 2000;
 }
 
 .bee-chat-bubble {
@@ -284,6 +287,16 @@
   padding: 2.5vh;
   display: inline-block;
   max-width: 80%;
+  margin-bottom: -5px;
+  transform: rotateX(-95deg);
+  transform-origin: 0 0 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.bee-information {
+  transform: scale(.5) translateX(200px);
+  opacity: 0;
 }
 
 .bee-information, .bee-chat {
@@ -296,6 +309,7 @@
 }
 
 .votes {
+  opacity: 0;
   padding-bottom: 3vh;
   padding-top: 5vh;
   display: flex;
