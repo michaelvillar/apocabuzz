@@ -57,7 +57,6 @@ let run = function(code) {
       bee.hide();
     }
     bee = new Bee({
-      id: m.id,
       info: [
         `<span>${m.name}</span>`,
         // 'Employment: <span>Worker</span>',

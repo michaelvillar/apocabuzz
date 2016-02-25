@@ -3,8 +3,10 @@ import createTemplate from '../lib/create-template.js';
 class Bee {
   constructor(options = {}) {
     this.options = options;
+    this.visible = false;
   }
   show() {
+    this.visible = true;
     this.el = document.createElement('section');
     this.el.className = 'game-state bee-state';
     this.el.innerHTML = createTemplate('bee')();
@@ -21,6 +23,9 @@ class Bee {
     }
 
     let floatBee = () => {
+      if (!this.visible) {
+        return;
+      }
       let el = this.el.querySelector('.bee');
       dynamics.animate(el, {
         translateY: Math.round(Math.random() * 50 - 25),
@@ -34,6 +39,9 @@ class Bee {
     };
 
     let buzzBee = () => {
+      if (!this.visible) {
+        return;
+      }
       let el = this.el.querySelector('.bee-in');
       let duration = Math.random() * 250 + 250;
       dynamics.animate(el, {
@@ -66,6 +74,9 @@ class Bee {
     };
 
     let animateMouth = () => {
+      if (!this.visible) {
+        return;
+      }
       let el = this.el.querySelectorAll('.bee-mouth');
       dynamics.animate(el, {
         scaleY: 0.5,
@@ -79,7 +90,10 @@ class Bee {
     };
 
     let animateInfo = () => {
-      let animateLine = function(el) {
+      let animateLine = (el) => {
+        if (!this.visible) {
+          return;
+        }
         dynamics.animate(el, {
           scale: 1 + (Math.random() - 0.5) / 4,
           translateX: Math.round(Math.random() * 30 - 15),
@@ -176,6 +190,7 @@ class Bee {
     showVotes();
   }
   hide() {
+    this.visible = false;
     this.el.parentNode.removeChild(this.el);
   }
   vote(team) {
