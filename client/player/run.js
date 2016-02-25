@@ -1,12 +1,6 @@
 import createTemplate from '../lib/create-template.js';
 import createSocket from '../lib/create-socket.js';
-
-let hideStates = function() {
-  let els = document.querySelectorAll('.state');
-  for (let i = 0; i < els.length; i++) {
-    els[i].style.display = 'none';
-  }
-}
+import states from '../lib/states.js'
 
 let run = function(id) {
   document.body.classList.add('app-player');
@@ -16,7 +10,7 @@ let run = function(id) {
     player: createTemplate('player'),
   };
 
-  hideStates();
+  states.hideAll();
 
   let currentBee = null;
 

@@ -1,5 +1,10 @@
-import runHost from './host/run.js';
-import runPlayer from './player/run.js';
+import host from './host/run.js';
+import player from './player/run.js';
 
-window.runHost = runHost;
-window.runPlayer = runPlayer;
+let app = {
+  host: host,
+  player: player,
+}
+
+module.exports = app;
+window.app = app;
