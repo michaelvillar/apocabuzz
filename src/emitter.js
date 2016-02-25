@@ -24,6 +24,11 @@ emitter.sendPlayers = function(to, code) {
 emitter.sendPlayer = function(to, player) {
   emitter.emit(to, 'player', player);
 };
+emitter.sendVote = function(to, team) {
+  emitter.emit(to, 'vote', {
+    team: team,
+  });
+};
 emitter.sendGameState = function(to, code) {
   db.games.getState(code).then(function(state) {
     let res = {

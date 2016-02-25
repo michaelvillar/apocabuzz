@@ -24,7 +24,11 @@ Router.prototype.beeChanged = function(host, data) {
   emitter.sendBee(host, host.code, data.bee.id);
 };
 Router.prototype.vote = function(host, data) {
-  return host.vote(data);
+  return db.players.get(data.player_id).then((player) => {
+    emitter.sendVote(host, player.team);
+  }).then(() => {
+    return host.vote(data);
+  });
 };
 Router.prototype.voted = function(host, data) {
   emitter.emit(host, 'voted', data);

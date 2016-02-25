@@ -111,5 +111,5 @@ sub.on('pmessage', function(pattern, channel, message) {
   }
 });
 
-console.log("Running on :3000");
-server.listen(3000);
+console.log("Running on :3001");
+server.listen(3001);

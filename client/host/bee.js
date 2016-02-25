@@ -169,6 +169,29 @@ class Bee {
     showBee();
     showVotes();
   }
+  hide() {
+
+  }
+  vote(team) {
+    let els = document.querySelectorAll('.votes-content .vote');
+    if (team === 'green') {
+      for (let i = 0; i < els.length; i++) {
+        let el = els[i];
+        if (!el.classList.contains('green')) {
+          el.classList.add('green');
+          break;
+        }
+      };
+    } else if (team === 'blue') {
+      for (let i = els.length - 1; i >= 0; i--) {
+        let el = els[i];
+        if (!el.classList.contains('blue')) {
+          el.classList.add('blue');
+          break;
+        }
+      };
+    }
+  }
 }
 
 module.exports = Bee;

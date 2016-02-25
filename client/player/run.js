@@ -16,7 +16,7 @@ let run = function(id) {
 
   let router = {};
   router.gameState = function(m) {
-    showState(m.state);
+    states.show(m.state);
   };
   router.beeChanged = function(bee) {
     let el = document.querySelector('.vote');

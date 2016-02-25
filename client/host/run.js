@@ -18,30 +18,14 @@ let run = function(code) {
   states.hideAll();
   states.hideAllGame();
 
-  setTimeout(function() {
-    let bee = new Bee({
-      info: [
-        '<span>Buzz Aldrin</span>',
-        'Employment: <span>Worker</span>',
-        'Assigned: <span>Pollen</span>',
-        'Birth: <span>5d ago</span>',
-        'Speed: <span>5 flowers/min</span>',
-      ],
-      chat: [
-        'Let me in, pleazzz...',
-        'I just came back from the <span>marguerites</span> and I saw some weird bees there!',
-        'Did my buddy <span>Lili</span> already enter? I think she turned into a <span>zombee</span>!!!</div>',
-      ],
-    });
-    bee.show();
-  }, 500);
+  // setTimeout(function() {
+  //   let bulletin = new Bulletin({
+  //     bulletin: 'Every bee under 2d should be banned!',
+  //   });
+  //   bulletin.show();
+  // }, 5000);
 
-  setTimeout(function() {
-    let bulletin = new Bulletin({
-      bulletin: 'Every bee under 2d should be banned!',
-    });
-    bulletin.show();
-  }, 5000);
+  let bee = null;
 
   let router = {};
   router.gameState = function(m) {
@@ -69,7 +53,28 @@ let run = function(code) {
     // document.querySelector('.hive.green .hive-content').innerHTML = templates.hive({ score: m.green });
   };
   router.beeChanged = function(m) {
-    // document.querySelector('.bee-content').innerHTML = templates.bee(m);
+    if (bee) {
+      bee.hide();
+    }
+    bee = new Bee({
+      id: m.id,
+      info: [
+        `<span>${m.name}</span>`,
+        // 'Employment: <span>Worker</span>',
+        // 'Assigned: <span>Pollen</span>',
+        // 'Birth: <span>5d ago</span>',
+        // 'Speed: <span>5 flowers/min</span>',
+      ],
+      chat: [
+        'Let me in, pleazzz...',
+        'I just came back from the <span>marguerites</span> and I saw some weird bees there!',
+        'Did my buddy <span>Lili</span> already enter? I think she turned into a <span>zombee</span>!!!</div>',
+      ],
+    });
+    bee.show();
+  };
+  router.vote = function(m) {
+    bee.vote(m.team);
   };
   router.voted = function(m) {
     // m.right = m.bee.type === m.vote;

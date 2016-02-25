@@ -16,6 +16,7 @@ Player.prototype.load = function() {
   return db.players.get(this.id).then((player) => {
     this.code = player.code;
     this.name = player.name;
+    this.team = player.team;
     this.player = player;
   });
 };
