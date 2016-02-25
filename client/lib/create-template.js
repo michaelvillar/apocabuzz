@@ -1,4 +1,9 @@
+let templates = {};
+
 module.exports = function(selector) {
-  let html = document.querySelector('#template-' + selector).innerHTML ;
-    return Handlebars.compile(html);  
+  if (!templates[selector]) {
+    let html = document.querySelector('#template-' + selector).innerHTML ;
+      templates[selector] = Handlebars.compile(html);  
+  }
+  return templates[selector];
 };

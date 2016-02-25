@@ -1,12 +1,16 @@
+import createTemplate from '../lib/create-template.js';
+
 class Bee {
   constructor(options = {}) {
     this.options = options;
   }
   show() {
-    let gameStateEl = document.querySelector('.game-state.bee-state');
+    this.el = document.createElement('section');
+    this.el.className = 'game-state bee-state';
+    this.el.innerHTML = createTemplate('bee')();
 
-    let showBee = function() {
-      let el = document.querySelector('.bee-container');
+    let showBee = () => {
+      let el = this.el.querySelector('.bee-container');
       dynamics.animate(el, {
         opacity: 1,
         scale: 1,
@@ -16,8 +20,8 @@ class Bee {
       });
     }
 
-    let floatBee = function() {
-      let el = document.querySelector('.bee');
+    let floatBee = () => {
+      let el = this.el.querySelector('.bee');
       dynamics.animate(el, {
         translateY: Math.round(Math.random() * 50 - 25),
         translateX: Math.round(Math.random() * 10 - 5),
@@ -29,8 +33,8 @@ class Bee {
       });
     };
 
-    let buzzBee = function() {
-      let el = document.querySelector('.bee-in');
+    let buzzBee = () => {
+      let el = this.el.querySelector('.bee-in');
       let duration = Math.random() * 250 + 250;
       dynamics.animate(el, {
         rotateZ: Math.round(Math.random() + 0.5),
@@ -43,8 +47,8 @@ class Bee {
       });
     };
 
-    let animateWings = function() {
-      let els = document.querySelectorAll('.bee-wings *');
+    let animateWings = () => {
+      let els = this.el.querySelectorAll('.bee-wings *');
       let duration = Math.random() * 1500 + 500;
       for (let i = 0; i < els.length; i++) {
         dynamics.animate(els[i], {
@@ -56,13 +60,13 @@ class Bee {
         });
       }
 
-      dynamics.setTimeout(function() {
+      dynamics.setTimeout(() => {
         animateWings();
       }, duration + Math.random() * 1000);
     };
 
-    let animateMouth = function() {
-      let el = document.querySelectorAll('.bee-mouth');
+    let animateMouth = () => {
+      let el = this.el.querySelectorAll('.bee-mouth');
       dynamics.animate(el, {
         scaleY: 0.5,
       }, {
@@ -74,7 +78,7 @@ class Bee {
       })
     };
 
-    let animateInfo = function() {
+    let animateInfo = () => {
       let animateLine = function(el) {
         dynamics.animate(el, {
           scale: 1 + (Math.random() - 0.5) / 4,
@@ -82,19 +86,19 @@ class Bee {
           translateY: Math.round(Math.random() * 4 - 2),
         }, {
           duration: 3000 + Math.random() * 4000,
-          complete: function() {
+          complete: () => {
             animateLine(el);
           },
         })
       };
-      let els = document.querySelectorAll('.bee-information-line');
+      let els = this.el.querySelectorAll('.bee-information-line');
       for (let i = 0; i < els.length; i++) {
         animateLine(els[i]);
       }
     };
 
-    let showChatBubbles = function() {
-      let els = document.querySelectorAll('.bee-chat-bubble');
+    let showChatBubbles = () => {
+      let els = this.el.querySelectorAll('.bee-chat-bubble');
       for (let i = 0; i < els.length; i++) {
         dynamics.animate(els[i], {
           rotateX: 0,
@@ -105,8 +109,8 @@ class Bee {
       }
     };
 
-    let showInformation = function() {
-      let el = document.querySelector('.bee-information');
+    let showInformation = () => {
+      let el = this.el.querySelector('.bee-information');
       dynamics.animate(el, {
         translateX: 0,
         opacity: 1,
@@ -118,8 +122,8 @@ class Bee {
       });
     };
 
-    let showVotes = function() {
-      let el = document.querySelector('.votes');
+    let showVotes = () => {
+      let el = this.el.querySelector('.votes');
       dynamics.animate(el, {
         opacity: 1,
       }, {
@@ -129,7 +133,7 @@ class Bee {
       });
     };
 
-    let infoEl = document.querySelector('.bee-information');
+    let infoEl = this.el.querySelector('.bee-information');
     for (let i = 0; i < this.options.info.length; i++) {
       let line = this.options.info[i];
       let el = document.createElement('div');
@@ -143,7 +147,7 @@ class Bee {
       infoEl.appendChild(el);
     }
 
-    let chatEl = document.querySelector('.bee-chat');
+    let chatEl = this.el.querySelector('.bee-chat');
     for (let i = 0; i < this.options.chat.length; i++) {
       let line = this.options.chat[i];
       let el = document.createElement('div');
@@ -155,9 +159,11 @@ class Bee {
       chatEl.appendChild(el);
     }
 
-    dynamics.css(gameStateEl, {
+    dynamics.css(this.el, {
       display: '',
     });
+
+    document.body.appendChild(this.el);
 
     animateWings();
     floatBee();
@@ -170,7 +176,7 @@ class Bee {
     showVotes();
   }
   hide() {
-
+    this.el.parentNode.removeChild(this.el);
   }
   vote(team) {
     let els = document.querySelectorAll('.votes-content .vote');
