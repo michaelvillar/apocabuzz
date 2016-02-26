@@ -8,7 +8,6 @@ let sub = require('./src/redis')();
 let pub = require('./src/redis')();
 let db = require('./src/db');
 let emitter = require('./src/emitter');
-let findNextCode = require('./src/find_next_code');
 
 let Router = require('./src/router');
 let Host = require('./src/host');
@@ -58,9 +57,7 @@ app.get('/join', function(req, res) {
 });
 
 app.post('/host', function(req, res) {
-  findNextCode()
-  .then(db.games.create)
-  .then(function(code) {
+  Host.create().then(function(code) {
     res.redirect(`/host?code=${code}`);
   });
 });

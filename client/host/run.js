@@ -59,7 +59,9 @@ let run = function(code) {
     bee = new Bee({
       info: [
         `<span>${m.name}</span>`,
-        // 'Employment: <span>Worker</span>',
+        `Employment: <span>${m.occupation}</span>`,
+        `Location: <span>${m.location}</span>`,
+        `Favorite flower: <span>${m.flower}</span>`,
         // 'Assigned: <span>Pollen</span>',
         // 'Birth: <span>5d ago</span>',
         // 'Speed: <span>5 flowers/min</span>',

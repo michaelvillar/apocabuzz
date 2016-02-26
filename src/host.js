@@ -1,6 +1,8 @@
 let _ = require('lodash');
 let emitter = require('./emitter');
 let db = require('./db');
+let Bee = require('./bee');
+let findNextCode = require('./find_next_code');
 
 let Host = function(socket, code, pub) {
   this.socket = socket;
@@ -11,6 +13,22 @@ let Host = function(socket, code, pub) {
   .then(() => {
     this.init();
   })
+};
+
+Host.create = function() {
+  var gameCode;
+  return findNextCode()
+  .then(db.games.create)
+  .then((code) => {
+    gameCode = code;
+    // create bees
+    let bees = Bee.generate(50);
+    return Promise.all(_.each(bees, function(bee) {
+      return db.bees.create(code, bee);
+    }));
+  }).then(() => {
+    return gameCode;
+  });
 };
 
 Host.prototype.load = function() {
@@ -42,7 +60,7 @@ Host.prototype.start = function() {
 };
 
 Host.prototype.nextBee = function() {
-  return db.bees.create(this.code).then((bee) => {
+  return db.games.nextBee(this.code).then((bee) => {
     this.currentBee = bee;
     this.pub.publish(`game_${this.code}`, JSON.stringify({
       url: 'beeChanged',
