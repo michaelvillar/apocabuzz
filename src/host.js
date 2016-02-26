@@ -12,23 +12,12 @@ let Host = function(socket, code, pub) {
   this.load()
   .then(() => {
     this.init();
-  })
+  });
 };
 
 Host.create = function() {
-  var gameCode;
   return findNextCode()
-  .then(db.games.create)
-  .then((code) => {
-    gameCode = code;
-    // create bees
-    let bees = Bee.generate(50);
-    return Promise.all(_.each(bees, function(bee) {
-      return db.bees.create(code, bee);
-    }));
-  }).then(() => {
-    return gameCode;
-  });
+  .then(db.games.create);
 };
 
 Host.prototype.load = function() {
@@ -60,12 +49,20 @@ Host.prototype.start = function() {
 };
 
 Host.prototype.nextBee = function() {
-  return db.games.nextBee(this.code).then((bee) => {
-    this.currentBee = bee;
-    this.pub.publish(`game_${this.code}`, JSON.stringify({
-      url: 'beeChanged',
-      bee: bee,
-    }));
+  return db.bees.list(this.code).then((bees) => {
+    let bee = Bee.generate(bees);
+    return db.bees.create(this.code, bee);
+  }).then((bee) => {
+    bee.type = Bee.getType(bee);
+    return db.bees.save(this.code, bee).then(() => {
+      this.currentBee = bee;
+      this.pub.publish(`game_${this.code}`, JSON.stringify({
+        url: 'beeChanged',
+        bee: bee,
+      }));
+    });
+  }).then((bee) => {
+    return db.games.nextBee(this.code);
   });
 };
 
@@ -213,6 +210,9 @@ Host.prototype.vote = function(data) {
       }
     });
   })
+  .catch((err) => {
+    console.log('Err', err);
+  });
 };
 
 module.exports = Host;

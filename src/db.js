@@ -135,12 +135,33 @@ db.players.get = function(id) {
 };
 
 db.bees.create = function(code, bee) {
-  return client.hmset(`game_${code}_bee_${bee.id}`, bee);
+  return client.hmset(`game_${code}_bee_${bee.id}`, bee).then(() => {
+    return bee;
+  });
+};
+
+db.bees.list = function(code) {
+  let bees = [];
+  let getNext = function(index) {
+    return db.bees.get(code, index).then((bee) => {
+      if (bee) {
+        bees.push(bee);
+        return getNext(index + 1);
+      }
+    });
+  };
+  return getNext(0).then(() => {
+    return bees;
+  });
 };
 
 db.bees.get = function(code, id) {
   return client.hgetall(`game_${code}_bee_${id}`);
 };
+
+db.bees.save = function(code, bee) {
+  return client.hmset(`game_${code}_bee_${bee.id}`, bee);
+}
 
 db.votes.list = function(code, bee_id) {
   return client.lrange(`game_${code}_bee_${bee_id}_votes`, 0, -1).then(function(ids) {

@@ -14,6 +14,9 @@ let Host = require('./src/host');
 let Player = require('./src/player');
 
 let bodyParser = require('body-parser')
+
+Promise = require('bluebird');
+
 app.use(bodyParser.urlencoded({
   extended: true
 }));
