@@ -5,11 +5,6 @@ import states from '../lib/states.js'
 let run = function(id) {
   document.body.classList.add('app-player');
 
-  let templates = {
-    bee: createTemplate('bee'),
-    player: createTemplate('player'),
-  };
-
   states.hideAll();
 
   let currentBee = null;
@@ -17,15 +12,16 @@ let run = function(id) {
   let router = {};
   router.gameState = function(m) {
     states.show(m.state);
-  };
-  router.beeChanged = function(bee) {
-    let el = document.querySelector('.vote');
-    el.innerHTML = templates.bee(bee);
-    currentBee = bee;
+    if (m.state === 'bee') {
+      let bee = m.bee;
+      let el = document.querySelector('.vote');
+      el.innerHTML = createTemplate('bee')(bee);
+      currentBee = bee;
+    }
   };
   router.player = function(player) {
     let el = document.querySelector('.player');
-    el.innerHTML = templates.player(player);
+    el.innerHTML = createTemplate('player')(player);
   };
 
   let socket = createSocket(router);

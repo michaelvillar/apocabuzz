@@ -31,6 +31,9 @@ emitter.sendVote = function(to, team) {
 };
 emitter.sendGameState = function(to, code) {
   db.games.getState(code).then(function(state) {
+    let url = state.split('/');
+    state = url[0];
+    let id = url[1];
     let res = {
       state: state,
     }
@@ -38,6 +41,18 @@ emitter.sendGameState = function(to, code) {
       return db.games.getWinner(code)
       .then(function(winner) {
         res.winner = winner;
+        return res;
+      });
+    } else if (state === 'bee') {
+      return db.bees.get(code, id)
+      .then(function(bee) {
+        res.bee = bee;
+        return res;
+      });
+    } else if (state === 'rule') {
+      return db.rules.get(code, id)
+      .then(function(rule) {
+        res.rule = rule;
         return res;
       });
     }
@@ -53,17 +68,6 @@ emitter.sendScore = function(to, code) {
       blue: score.blue,
       green: score.green,
     });
-  });
-};
-emitter.sendBee = function(to, code, id) {
-  db.bees.get(code, id).then(function(bee) {
-    emitter.emit(to, 'beeChanged', bee);
-  });
-};
-
-emitter.sendCurrentBee = function(to, code) {
-  db.games.getCurrentBee(code).then(function(bee) {
-    emitter.emit(to, 'beeChanged', bee);
   });
 };
 

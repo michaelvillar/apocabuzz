@@ -1,15 +1,22 @@
+import createTemplate from '../lib/create-template.js';
+
 class Bulletin {
   constructor(options = {}) {
     this.options = options;
+    this.visible = false;
   }
   show() {
-    let gameStateEl = document.querySelector('.game-state.bulletin');
-    let faderEl = document.querySelector('.bulletin-background-fader');
-    let backgroundEl = document.querySelector('.bulletin-background');
-    let titleEl = document.querySelector('.bulletin h1');
-    let descriptionEl = document.querySelector('.bulletin p');
+    this.visible = true;
+    this.el = document.createElement('section');
+    this.el.className = 'game-state bulletin-state';
+    this.el.innerHTML = createTemplate('bulletin')();
 
-    descriptionEl.innerText = this.options.bulletin;
+    this.faderEl = this.el.querySelector('.bulletin-background-fader');
+    this.backgroundEl = this.el.querySelector('.bulletin-background');
+    this.titleEl = this.el.querySelector('h1');
+    this.descriptionEl = this.el.querySelector('p');
+
+    this.descriptionEl.innerText = this.options.bulletin;
 
     let createZombeeDiv = function() {
       let el = document.createElement('div');
@@ -17,12 +24,12 @@ class Bulletin {
       return el;
     }
 
-    if (backgroundEl.children.length == 0) {
+    if (this.backgroundEl.children.length == 0) {
       for (let x = 0; x < 5; x++) {
         for (let y = 0; y < 10; y++) {
           let i = (x * 5) + y;
           let el = createZombeeDiv();
-          backgroundEl.appendChild(el);
+          this.backgroundEl.appendChild(el);
           dynamics.css(el, {
             top: y * 200,
             left: x * 300 + (y % 2 == 0 ? 150 : 0),
@@ -32,28 +39,30 @@ class Bulletin {
       }
     }
 
-    dynamics.css(faderEl, {
+    dynamics.css(this.faderEl, {
       opacity: 0,
       scale: 1.4
     })
 
-    dynamics.css(titleEl, {
+    dynamics.css(this.titleEl, {
       transform: '',
     });
-    dynamics.css(descriptionEl, {
+    dynamics.css(this.descriptionEl, {
       transform: '',
     });
 
-    dynamics.css(backgroundEl, {
+    dynamics.css(this.backgroundEl, {
       rotateZ: 20,
       translateY: -100,
     });
 
-    dynamics.css(gameStateEl, {
+    dynamics.css(this.el, {
       display: '',
     });
 
-    dynamics.animate(faderEl, {
+    document.body.appendChild(this.el);
+
+    dynamics.animate(this.faderEl, {
       opacity: 1,
       scale: 1,
     }, {
@@ -61,7 +70,7 @@ class Bulletin {
       friction: 50,
     });
 
-    dynamics.animate(backgroundEl, {
+    dynamics.animate(this.backgroundEl, {
       rotateZ: 20,
       translateY: -10000,
     }, {
@@ -69,57 +78,56 @@ class Bulletin {
       type: dynamics.linear,
     });
 
-    dynamics.animate(titleEl, {
+    dynamics.animate(this.titleEl, {
       rotateX: 0,
     }, {
       type: dynamics.spring,
     });
 
-    dynamics.animate(descriptionEl, {
+    dynamics.animate(this.descriptionEl, {
       rotateX: 0,
     }, {
       type: dynamics.spring,
       delay: 500,
     });
-
-    dynamics.animate(titleEl, {
+  }
+  hide() {
+    dynamics.animate(this.titleEl, {
       translateY: 500,
       rotateZ: 45,
     }, {
       type: dynamics.easeIn,
       duration: 800,
       friction: 1,
-      delay: 4000,
     });
 
-    dynamics.animate(descriptionEl, {
+    dynamics.animate(this.descriptionEl, {
       translateY: 1000,
       rotateZ: -25,
     }, {
       type: dynamics.easeIn,
       duration: 800,
       friction: 1,
-      delay: 4200,
+      delay: 200,
     });
 
-    dynamics.animate(faderEl, {
+    dynamics.animate(this.faderEl, {
       opacity: 0,
       scale: 1.4,
     }, {
       duration: 500,
       friction: 50,
-      delay: 4400,
+      delay: 400,
     });
 
     dynamics.setTimeout(() => {
-      dynamics.stop(backgroundEl);
-      dynamics.stop(descriptionEl);
-      dynamics.css(gameStateEl, {
-        display: 'none',
-      });
+      dynamics.stop(this.backgroundEl);
+      dynamics.stop(this.descriptionEl);
       if (this.options.complete)
         this.options.complete();
-    }, 4800);
+      this.visible = false;
+      this.el.parentNode.removeChild(this.el);
+    }, 800);
   }
 };
 

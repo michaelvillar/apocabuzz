@@ -3,12 +3,16 @@
   <button class="button-start">Everybody is ready</button>
 </section>
 
+<div class="player">
+  <script type="text/x-handlebars" id="template-player">
+  <div class="player-name team-\{{team}}">\{{name}}</div>
+  </script>
+</div>
 <section class="state game">
-  <div class="player">
-    <script type="text/x-handlebars" id="template-player">
-    <div class="player-name team-\{{team}}">\{{name}}</div>
-    </script>
-  </div>
+
+</section>
+
+<section class="state bee">
   <div class="vote">
     <script type="text/x-handlebars" id="template-bee">
     \{{#if name}}

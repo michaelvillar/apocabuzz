@@ -2,7 +2,9 @@ let _ = require('lodash');
 let emitter = require('./emitter');
 let db = require('./db');
 let Bee = require('./bee');
+let Rule = require('./rule');
 let findNextCode = require('./find_next_code');
+let rand = require('./rand');
 
 let Host = function(socket, code, pub) {
   this.socket = socket;
@@ -21,12 +23,7 @@ Host.create = function() {
 };
 
 Host.prototype.load = function() {
-  return db.games.getCurrentBee(this.code)
-  .then((bee) => {
-    this.currentBee = bee;
-
-    return this.loadPlayers();
-  });
+  return this.loadPlayers();
 };
 
 Host.prototype.loadPlayers = function() {
@@ -38,31 +35,51 @@ Host.prototype.loadPlayers = function() {
 Host.prototype.init = function() {
   emitter.sendPlayers(this, this.code);
   emitter.sendGameState(this, this.code);
-  emitter.sendCurrentBee(this, this.code);
   emitter.sendScore(this, this.code);
 };
 
 Host.prototype.start = function() {
   return this.load().then(() => {
-    return this.nextBee();
+    return this.tick();
   });
+};
+
+Host.prototype.tick = function() {
+  this.nextRule();
+  // if (rand.n(1) === 0) {
+  //   this.nextBee();
+  // } else {
+  //   this.nextRule();
+  // }
 };
 
 Host.prototype.nextBee = function() {
   return db.bees.list(this.code).then((bees) => {
     let bee = Bee.generate(bees);
+    bee.type = Bee.getType(bee);
     return db.bees.create(this.code, bee);
   }).then((bee) => {
-    bee.type = Bee.getType(bee);
-    return db.bees.save(this.code, bee).then(() => {
-      this.currentBee = bee;
-      this.pub.publish(`game_${this.code}`, JSON.stringify({
-        url: 'beeChanged',
-        bee: bee,
-      }));
-    });
-  }).then((bee) => {
-    return db.games.nextBee(this.code);
+    return db.games.setState(this.code, `bee/${bee.id}`);
+  }).then(() => {
+    this.pub.publish(`game_${this.code}`, JSON.stringify({
+      url: 'gameStateChanged',
+    }));
+  });
+};
+
+Host.prototype.nextRule = function() {
+  return db.rules.list(this.code).then((rules) => {
+    let rule = Rule.generate(rules);
+    return db.rules.create(this.code, rule);
+  }).then((rule) => {
+    return db.games.setState(this.code, `rule/${rule.id}`);
+  }).then(() => {
+    this.pub.publish(`game_${this.code}`, JSON.stringify({
+      url: 'gameStateChanged',
+    }));
+    setTimeout(() => {
+      this.nextBee();
+    }, 5000);
   });
 };
 
@@ -91,15 +108,25 @@ Host.prototype.getPlayer = function(id) {
 }
 
 Host.prototype.vote = function(data) {
-  if (!this.currentBee) {
-    return;
-  }
-  if (parseInt(data.bee_id) !== parseInt(this.currentBee.id)) {
-    console.log('Vote was ignored', data.bee_id, this.currentBee.id);
-    return;
-  }
+  var currentBee;
+  return db.games.getState(this.code)
+  .then((state) => {
+    let url = state.split('/');
+    if (url[0] != 'bee') {
+      throw new Error(`Vote was ignored ${data.bee_id} ${currentBee}`);
+    }
 
-  return db.votes.create(this.code, data.bee_id, data.type, data.player_id)
+    return db.bees.get(this.code, url[1]);
+  })
+  .then((bee) => {
+    currentBee = bee;
+
+    if (parseInt(data.bee_id) !== parseInt(currentBee.id)) {
+      throw new Error(`Vote was ignored ${data.bee_id} ${currentBee.id}`);
+    }
+
+    return db.votes.create(this.code, data.bee_id, data.type, data.player_id);
+  })
   .then(() => {
     return db.votes.list(this.code, data.bee_id);
   })
@@ -153,17 +180,17 @@ Host.prototype.vote = function(data) {
 
     this.pub.publish(`game_${this.code}`, JSON.stringify({
       url: 'voted',
-      bee: this.currentBee,
+      bee: currentBee,
       vote: type,
       team: team,
     }));
 
     console.log("Vote on", data.bee_id, "is", type, "from team", team);
-    let isRight = this.currentBee.type === type;
+    let isRight = currentBee.type === type;
     let oppositeTeam = (team === 'blue' ? 'green' : 'blue');
 
     let promise = null;
-    if (this.currentBee.type === 'bee') {
+    if (currentBee.type === 'bee') {
       if (isRight) {
         promise = db.games.incrementScore(this.code, team, 1);
       } else {
@@ -206,7 +233,7 @@ Host.prototype.vote = function(data) {
           }));
         });
       } else {
-        return this.nextBee();
+        return this.tick();
       }
     });
   })

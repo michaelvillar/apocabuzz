@@ -23,7 +23,6 @@ Player.prototype.load = function() {
 
 Player.prototype.init = function() {
   emitter.sendGameState(this, this.code);
-  emitter.sendCurrentBee(this, this.code);
   emitter.sendPlayer(this, this.player);
 
   this.socket.on('start', () => {

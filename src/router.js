@@ -19,10 +19,6 @@ Router.prototype.scoreChanged = function(host) {
 Router.prototype.gameStart = function(host) {
   host.start();
 };
-Router.prototype.beeChanged = function(host, data) {
-  emitter.sendBee(this._getGamePlayers(host), host.code, data.bee.id);
-  emitter.sendBee(host, host.code, data.bee.id);
-};
 Router.prototype.vote = function(host, data) {
   return db.players.get(data.player_id).then((player) => {
     emitter.sendVote(host, player.team);

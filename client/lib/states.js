@@ -13,7 +13,10 @@ let states = {
   },
   show: function(state) {
     states.hideAll();
-    document.querySelector(`.state.${state}`).style.display = '';
+    let el = document.querySelector(`.state.${state}`);
+    if (el) {
+      el.style.display = '';
+    }
   },
 };
 

@@ -1,3 +1,11 @@
+section {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
 .state {
   display: flex;
   justify-content: center;
@@ -349,9 +357,6 @@
 }
 
 /* Bulletin */
-.game-state.bulletin {
-}
-
 .bulletin-background-fader,
 .bulletin-gradient,
 .bulletin-content {
@@ -376,7 +381,7 @@
   perspective: 2000;
 }
 
-.bulletin h1 {
+.bulletin-content h1 {
   position: absolute;
   top: 23vh;
   left: 45vw;
@@ -392,7 +397,7 @@
   -webkit-backface-visibility: hidden;
 }
 
-.bulletin p {
+.bulletin-content p {
   position: absolute;
   top: 48vh;
   left: 10vw;

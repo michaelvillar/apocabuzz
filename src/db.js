@@ -1,3 +1,4 @@
+let _ = require('lodash');
 let client = require('./redis')();
 let stringRand = require('./string_rand');
 
@@ -15,7 +16,6 @@ let findNextPlayerId = function() {
 let db = {
   games: {},
   players: {},
-  bees: {},
   votes: {},
 };
 
@@ -95,18 +95,6 @@ db.games.getCurrentBee = function(code) {
   });
 };
 
-db.games.nextBee = function(code) {
-  return client.hget(`game_${code}`, 'bee_id')
-  .then(function(bee_id) {
-    bee_id = parseInt(bee_id || -1) + 1;
-    return client.hset(`game_${code}`, 'bee_id', bee_id).then(function() {
-      return bee_id;
-    });
-  }).then(function(bee_id) {
-    return db.bees.get(code, bee_id);
-  });
-};
-
 db.players.list = function(code) {
   return client.lrange(`game_${code}_players`, 0, -1).then(function(ids) {
     return Promise.all(ids.map(function(id) {
@@ -134,34 +122,38 @@ db.players.get = function(id) {
   });
 };
 
-db.bees.create = function(code, bee) {
-  return client.hmset(`game_${code}_bee_${bee.id}`, bee).then(() => {
-    return bee;
-  });
-};
-
-db.bees.list = function(code) {
-  let bees = [];
-  let getNext = function(index) {
-    return db.bees.get(code, index).then((bee) => {
-      if (bee) {
-        bees.push(bee);
-        return getNext(index + 1);
-      }
+_.each(['bee', 'rule'], function(type) {
+  let key = `${type}s`;
+  db[key] = {};
+  db[key].create = function(code, obj) {
+    return client.hmset(`game_${code}_${type}_${obj.id}`, obj).then(() => {
+      return obj;
     });
   };
-  return getNext(0).then(() => {
-    return bees;
-  });
-};
 
-db.bees.get = function(code, id) {
-  return client.hgetall(`game_${code}_bee_${id}`);
-};
+  db[key].list = function(code) {
+    let objs = [];
+    let getNext = function(index) {
+      return db[key].get(code, index).then((obj) => {
+        if (obj) {
+          objs.push(obj);
+          return getNext(index + 1);
+        }
+      });
+    };
+    return getNext(0).then(() => {
+      return objs;
+    });
+  };
 
-db.bees.save = function(code, bee) {
-  return client.hmset(`game_${code}_bee_${bee.id}`, bee);
-}
+  db[key].get = function(code, id) {
+    return client.hgetall(`game_${code}_${type}_${id}`);
+  };
+
+  db[key].save = function(code, obj) {
+    return client.hmset(`game_${code}_${type}_${obj.id}`, obj);
+  }
+});
 
 db.votes.list = function(code, bee_id) {
   return client.lrange(`game_${code}_bee_${bee_id}_votes`, 0, -1).then(function(ids) {
