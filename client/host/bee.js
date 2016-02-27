@@ -111,18 +111,6 @@ class Bee {
       }
     };
 
-    let showChatBubbles = () => {
-      let els = this.el.querySelectorAll('.bee-chat-bubble');
-      for (let i = 0; i < els.length; i++) {
-        dynamics.animate(els[i], {
-          rotateX: 0,
-        }, {
-          type: dynamics.spring,
-          delay: 1000 + i * 250,
-        });
-      }
-    };
-
     let showInformation = () => {
       let el = this.el.querySelector('.bee-information');
       dynamics.animate(el, {
@@ -161,17 +149,7 @@ class Bee {
       infoEl.appendChild(el);
     }
 
-    let chatEl = this.el.querySelector('.bee-chat');
-    for (let i = 0; i < this.options.chat.length; i++) {
-      let line = this.options.chat[i];
-      let el = document.createElement('div');
-      el.classList.add('bee-chat-bubble');
-      el.innerHTML = line;
-      dynamics.css(el, {
-        left: `${i % 2 == 0 ? 5 : 0}vh`,
-      })
-      chatEl.appendChild(el);
-    }
+    this.addChat(this.options.chat);
 
     dynamics.css(this.el, {
       display: '',
@@ -184,7 +162,7 @@ class Bee {
     buzzBee();
     animateMouth();
     animateInfo();
-    showChatBubbles();
+    this.showChatBubbles();
     showInformation();
     showBee();
     showVotes();
@@ -211,6 +189,77 @@ class Bee {
           break;
         }
       };
+    }
+  }
+  voted(m) {
+    let correct = m.bee.type === m.vote;
+    this.hideChatBubbles();
+    setTimeout(() => {
+      let line1 = '';
+      let line2 = '';
+      if (m.bee.type === 'bee') {
+        if (correct) {
+          line1 = 'Yay!',
+          line2 = 'Thanks for welcoming me!';
+        } else {
+          line1 = 'Awwww, why? I\'m legitimate';
+          line2 = 'Well... I guess I\'ll find another hive';
+        }
+      } else {
+        if (correct) {
+          line1 = 'Bzzzzzz, so close';
+          line2 = 'You got me, next time I\'ll get you!';
+        } else {
+          line1 = 'MUAHA';
+          line2 = 'I tricked you!!! Mmmh, your bees are good.';
+        }
+      }
+      this.addChat([
+        line1,
+        line2
+      ]);
+      this.showChatBubbles();
+    }, 350);
+
+
+    console.log(correct);
+    console.log(m.bee.type);
+  }
+  hideChatBubbles() {
+    let els = this.el.querySelectorAll('.bee-chat-bubble');
+    for (let i = 0; i < els.length; i++) {
+      dynamics.animate(els[i], {
+        rotateX: -95,
+      }, {
+        type: dynamics.easeInOut,
+        delay: i * 50,
+        duration: 260,
+      });
+    }
+  }
+  showChatBubbles() {
+    let els = this.el.querySelectorAll('.bee-chat-bubble');
+    for (let i = 0; i < els.length; i++) {
+      dynamics.animate(els[i], {
+        rotateX: 0,
+      }, {
+        type: dynamics.spring,
+        delay: 1000 + i * 250,
+      });
+    }
+  }
+  addChat(chat) {
+    let chatEl = this.el.querySelector('.bee-chat');
+    chatEl.innerHTML = '';
+    for (let i = 0; i < chat.length; i++) {
+      let line = chat[i];
+      let el = document.createElement('div');
+      el.classList.add('bee-chat-bubble');
+      el.innerHTML = line;
+      dynamics.css(el, {
+        left: `${i % 2 == 0 ? 5 : 0}vh`,
+      })
+      chatEl.appendChild(el);
     }
   }
 }

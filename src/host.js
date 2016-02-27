@@ -56,8 +56,10 @@ Host.prototype.tick = function() {
 Host.prototype.nextBee = function() {
   return db.bees.list(this.code).then((bees) => {
     let bee = Bee.generate(bees);
-    bee.type = Bee.getType(bee);
-    return db.bees.create(this.code, bee);
+    return db.rules.list(this.code).then((rules) => {
+      bee.type = Rule.getBeeType(bee, rules);
+      return db.bees.create(this.code, bee);
+    });
   }).then((bee) => {
     return db.games.setState(this.code, `bee/${bee.id}`);
   }).then(() => {
@@ -215,7 +217,7 @@ Host.prototype.vote = function(data) {
       return db.games.getScore(this.code);
     })
     .then((scores) => {
-      let maxScore = 10;
+      let maxScore = 37;
       if (scores.blue >= maxScore || scores.green >= maxScore) {
         // game is done
         let winner = 'green';
@@ -233,7 +235,9 @@ Host.prototype.vote = function(data) {
           }));
         });
       } else {
-        return this.tick();
+        setTimeout(() => {
+          this.tick();
+        }, 5000);
       }
     });
   })

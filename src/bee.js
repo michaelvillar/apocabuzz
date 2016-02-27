@@ -22,9 +22,4 @@ Bee.generate = function(currentBees) {
   return bee;
 };
 
-Bee.getType = function(bee) {
-  // todo: depending on rules, resolve type
-  return 'bee';
-};
-
 module.exports = Bee;

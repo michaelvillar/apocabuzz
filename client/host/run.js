@@ -79,8 +79,7 @@ let run = function(code) {
     bee.vote(m.team);
   };
   router.voted = function(m) {
-    // m.right = m.bee.type === m.vote;
-    // document.querySelector('.vote-content').innerHTML = templates.vote(m);
+    bee.voted(m);
   };
 
   let socket = createSocket(router);
