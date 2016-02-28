@@ -178,6 +178,52 @@ section {
   transform-origin: 50% 40%;
 }
 
+.zombee .bee-body {
+  background-image: url(/public/img/zombee/body.svg);
+  width: 122px;
+  height: 204px;
+  left: 81px;
+  top: 100px;
+}
+.zombee .bee-head {
+  background-image: url(/public/img/zombee/head.svg);
+}
+.zombee .bee-left-wings {
+  background-image: url(/public/img/zombee/left-wings.svg);
+  width: 145px;
+  height: 108px;
+}
+.zombee .bee-right-wings {
+  background-image: url(/public/img/zombee/right-wings.svg);
+  width: 145px;
+  height: 108px;
+}
+.zombee .bee-left-antenna {
+  background-image: url(/public/img/zombee/left-antenna.svg);
+}
+.zombee .bee-right-antenna {
+  background-image: url(/public/img/zombee/right-antenna.svg);
+}
+.zombee .bee-left-eye {
+  background-image: url(/public/img/zombee/left-eye.svg);
+  width: 25px;
+  height: 35px;
+}
+.zombee .bee-right-eye {
+  background-image: url(/public/img/zombee/right-eye.svg);
+  width: 25px;
+  height: 35px;
+}
+.zombee .bee-mouth {
+  background-image: url(/public/img/zombee/mouth.svg);
+  width: 71px;
+  height: 33px;
+}
+.zombee .bee-shadow {
+  background-image: url(/public/img/zombee/shadow.svg);
+}
+
+
 .bee-body {
   background: url(/public/img/bee/body.svg) no-repeat;
   width: 122px;
