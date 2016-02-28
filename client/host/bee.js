@@ -206,6 +206,8 @@ class Bee {
           line2 = 'Well... I guess I\'ll find another hive';
         }
       } else {
+        let elContent = this.el.querySelector('.bee-content');
+        elContent.classList.add('zombee');
         if (correct) {
           line1 = 'Bzzzzzz, so close';
           line2 = 'You got me, next time I\'ll get you!';
