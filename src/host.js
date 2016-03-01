@@ -23,7 +23,19 @@ Host.create = function() {
 };
 
 Host.prototype.load = function() {
-  return this.loadPlayers();
+  return this.loadPlayers().then(() => {
+    return this.getInternalState();
+  }).then((state) => {
+    if (state.step !== 0) {
+      return db.games.getState(this.code).then((state) => {
+        if (!state.match(/bee/)) {
+          setTimeout(() => {
+            this.tick();
+          }, 5000);
+        }
+      });
+    }
+  });
 };
 
 Host.prototype.loadPlayers = function() {
@@ -83,11 +95,28 @@ Host.prototype.tick = function() {
       }).then(() => {
         return this.nextRule();
       })
+    } else if (state.step % 5 === 4 && state.last_score != state.step) {
+      this.editInternalState(function(state) {
+        state.last_score = state.step;
+      }).then(() => {
+        return this.showScore();
+      });
     } else {
       return this.incrementStep().then(() => {
         return this.nextBee();
       });
     }
+  });
+};
+
+Host.prototype.showScore = function() {
+  return db.games.setState(this.code, `game`).then(() => {
+    this.pub.publish(`game_${this.code}`, JSON.stringify({
+      url: 'gameStateChanged',
+    }));
+    setTimeout(() => {
+      this.tick();
+    }, 5000);
   });
 };
 

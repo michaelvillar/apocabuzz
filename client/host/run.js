@@ -55,6 +55,15 @@ let run = function(code) {
       showBee(m.bee);
     } else if (m.state === 'rule') {
       showBulletin(m.rule);
+    } else {
+      if (bee) {
+        bee.hide();
+        bee = null;
+      }
+      if (bulletin) {
+        bulletin.hide();
+        bulletin = null;
+      }
     }
   };
   router.playersChanged = function(m) {
