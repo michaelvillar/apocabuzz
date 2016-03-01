@@ -132,7 +132,16 @@ section {
   flex-direction: column;
 }
 
-.game-state.bee-state.zombee {
+.bee-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0;
+  background-repeat: no-repeat;
+}
+.zombee .bee-background {
   background-image: url(/public/img/background-zombee.png);
 }
 

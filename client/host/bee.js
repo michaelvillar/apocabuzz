@@ -207,6 +207,12 @@ class Bee {
         }
       } else {
         this.el.classList.add('zombee');
+        let backgroundEl = this.el.querySelector('.bee-background');
+        dynamics.animate(backgroundEl, {
+          opacity: 1,
+        }, {
+          duration: 250,
+        });
         if (correct) {
           line1 = 'Bzzzzzz, so close';
           line2 = 'You got me, next time I\'ll get you!';
@@ -222,10 +228,22 @@ class Bee {
       this.showChatBubbles();
     }, 350);
 
-    this.el.classList.add('result');
     let finalVoteEl = this.el.querySelector('.final-vote-content');
+    dynamics.css(finalVoteEl, {
+      opacity: 0,
+      rotateZ: 7,
+    });
+    this.el.classList.add('result');
     finalVoteEl.classList.add(`${m.team}-team`);
     finalVoteEl.innerText = `${m.team} team voted ${m.vote}`;
+
+    dynamics.animate(finalVoteEl, {
+      opacity: 1,
+      rotateZ: 0,
+    }, {
+      type: dynamics.spring,
+      frequency: 500,
+    });
 
     console.log(correct);
     console.log(m.bee.type);
