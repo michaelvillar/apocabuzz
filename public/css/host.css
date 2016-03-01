@@ -132,6 +132,10 @@ section {
   flex-direction: column;
 }
 
+.game-state.bee-state.zombee {
+  background-image: url(/public/img/background-zombee.png);
+}
+
 .bee-content {
   display: flex;
   justify-content: space-between;
@@ -356,10 +360,16 @@ section {
 .bee-information, .bee-chat {
   color: #825F09;
 }
+.zombee .bee-information {
+  color: #FFE4DC;
+}
 
 .bee-information span, .bee-chat span {
   color: #FA4F13;
   font-family: "DIN-BoldAlternate";
+}
+.zombee .bee-information span {
+  color: white;
 }
 
 .votes {

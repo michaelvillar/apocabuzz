@@ -20,10 +20,10 @@ Router.prototype.gameStart = function(host) {
   host.start();
 };
 Router.prototype.vote = function(host, data) {
-  return db.players.get(data.player_id).then((player) => {
+  return host.vote(data).then(() => {
+    return db.players.get(data.player_id);
+  }).then((player) => {
     emitter.sendVote(host, player.team);
-  }).then(() => {
-    return host.vote(data);
   });
 };
 Router.prototype.voted = function(host, data) {

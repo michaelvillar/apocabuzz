@@ -241,9 +241,6 @@ Host.prototype.vote = function(data) {
       }
     });
   })
-  .catch((err) => {
-    console.log('Err', err);
-  });
 };
 
 module.exports = Host;
