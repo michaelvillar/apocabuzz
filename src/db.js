@@ -2,6 +2,10 @@ let _ = require('lodash');
 let client = require('./redis')();
 let stringRand = require('./string_rand');
 
+String.prototype.capitalize = function() {
+  return this.charAt(0).toUpperCase() + this.slice(1);
+}
+
 let findNextPlayerId = function() {
   let id = stringRand(12).toUpperCase();
   return db.players.isExisting(id).then(function(exists) {
@@ -29,21 +33,20 @@ db.games.create = function(code) {
   });
 };
 
-db.games.getState = function(code) {
-  return client.hget(`game_${code}`, 'state');
-};
-
-db.games.setState = function(code, state) {
-  return client.hset(`game_${code}`, 'state', state);
-};
-
-db.games.getWinner = function(code) {
-  return client.hget(`game_${code}`, 'winner');
-};
-
-db.games.setWinner = function(code, winner) {
-  return client.hset(`game_${code}`, 'winner', winner);
-};
+let properties = [
+  'state',
+  'winner',
+  'internalState',
+];
+_.each(properties, function(property) {
+  let key = property.capitalize();
+  db.games[`get${key}`] = function(code) {
+    return client.hget(`game_${code}`, property);
+  };
+  db.games[`set${key}`] = function(code, value) {
+    return client.hset(`game_${code}`, property, value);
+  };
+});
 
 db.games.join = function(code, name, team) {
   return db.games.isExisting(code)

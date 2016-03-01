@@ -44,13 +44,51 @@ Host.prototype.start = function() {
   });
 };
 
+Host.prototype.getInternalState = function() {
+  return db.games.getInternalState(this.code).then((state) => {
+    state = state ? JSON.parse(state) : {
+      step: 0,
+      last_bulletin: -1,
+      last_score: 0,
+    };
+    return state;
+  });
+};
+
+Host.prototype.editInternalState = function(callback) {
+  return this.getInternalState().then((state) => {
+    callback(state);
+    return db.games.setInternalState(this.code, JSON.stringify(state));
+  })
+};
+
+Host.prototype.incrementStep = function() {
+  return this.editInternalState(function(state) {
+    state.step += 1;
+  });
+};
+
 Host.prototype.tick = function() {
-  this.nextRule();
-  // if (rand.n(1) === 0) {
-  //   this.nextBee();
-  // } else {
-  //   this.nextRule();
-  // }
+  return this.getInternalState().then((state) => {
+    let showBulletin = false;
+    if (state.step - state.last_bulletin >= 5) {
+      showBulletin = true;
+    } else if (state.step - state.last_bulletin >= 2 && rand.n(2) === 0) {
+      showBulletin = true;
+    }
+
+    if (showBulletin) {
+      this.editInternalState(function(state) {
+        state.last_bulletin = state.step;
+      }).then(() => {
+        return this.nextRule();
+      })
+    } else {
+      return this.incrementStep().then(() => {
+        return this.nextBee();
+      });
+    }
+  });
 };
 
 Host.prototype.nextBee = function() {
@@ -80,7 +118,7 @@ Host.prototype.nextRule = function() {
       url: 'gameStateChanged',
     }));
     setTimeout(() => {
-      this.nextBee();
+      this.tick();
     }, 5000);
   });
 };
