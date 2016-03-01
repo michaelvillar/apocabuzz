@@ -222,6 +222,10 @@ class Bee {
       this.showChatBubbles();
     }, 350);
 
+    this.el.classList.add('result');
+    let finalVoteEl = this.el.querySelector('.final-vote-content');
+    finalVoteEl.classList.add(`${m.team}-team`);
+    finalVoteEl.innerText = `${m.team} team voted ${m.vote}`;
 
     console.log(correct);
     console.log(m.bee.type);

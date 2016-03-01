@@ -139,6 +139,7 @@ section {
 .bee-content {
   display: flex;
   justify-content: space-between;
+  margin-bottom: 20vh;
 }
 
 .bee-information {
@@ -372,7 +373,14 @@ section {
   color: white;
 }
 
+.bee-state.result .votes {
+  display: none;
+}
 .votes {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0;
   opacity: 0;
   padding-bottom: 3vh;
   padding-top: 5vh;
@@ -410,6 +418,29 @@ section {
 .vote.blue {
   border: 0;
   background: #04AED9;
+}
+
+.bee-state.result .final-vote {
+  display: flex;
+}
+.final-vote {
+  display: none;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding-bottom: 3vh;
+  padding-top: 5vh;
+}
+.final-vote-content {
+  font-family: "DIN-BoldAlternate";
+  font-size: 7vh;
+  color: white;
+  padding: 7vh;
+  line-height: 0;
 }
 
 /* Bulletin */
